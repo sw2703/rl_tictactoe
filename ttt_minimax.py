@@ -128,9 +128,9 @@ class GUI:
     handler = lambda: self.reset()
     button = Button(self.app, text='reset', command=handler)
     button.grid(row=self.board.size+1, column=0, columnspan=self.board.size, sticky="WE")
-    hander = lambda: pass
+    handler = lambda: None
     button = Button(self.app, text='dummy', command=handler)
-    button.grid(row=self.board.size+1, column=0, columnspan=self.board.size, sticky="WE")
+    button.grid(row=self.board.size+2, column=0, columnspan=self.board.size, sticky="WE")
     self.update()
     
   def reset(self):

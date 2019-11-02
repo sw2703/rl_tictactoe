@@ -39,7 +39,7 @@ class Board:
         return (-1,None)
       else:
         return (+1,None)
-    elif self.tied():
+    elif self.filled():
       return (0,None)
     elif player:
       best = (-2,None)
@@ -61,7 +61,7 @@ class Board:
   def best(self):
     return self.__minimax(True)[1]
   
-  def tied(self):
+  def filled(self):
     for (x,y) in self.fields:
       if self.fields[x,y]==self.empty:
         return False

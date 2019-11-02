@@ -109,6 +109,19 @@ class Board:
       return winning
     # default
     return None
+
+  def judge(self):
+    """
+    Returns:
+        1 if player wins, -1 if opponent wins, 0 otherwise (including unfinished game)
+    """    
+    if self.won():
+      return -1
+    board = Board(self)
+    (board.player,board.opponent) = (board.opponent,board.player)
+    if self.won():
+      return 1
+    return 0
   
   def __str__(self):
     string = ''

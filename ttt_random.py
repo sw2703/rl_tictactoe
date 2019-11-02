@@ -14,7 +14,7 @@ from copy import deepcopy
 
 class Board:
   
-  def __init__(self,other=None):
+  def __init__(self, other = None):
     self.player = 'X'
     self.opponent = 'O'
     self.empty = '.'
@@ -60,6 +60,12 @@ class Board:
   
   def best(self):
     return self.__minimax(True)[1]
+  
+  def filled(self):
+    for (x,y) in self.fields:
+      if self.fields[x,y]==self.empty:
+        return False
+    return True
     
   def rand_move(self):
     legal_moves = []
@@ -119,7 +125,7 @@ class Board:
       return -1
     board = Board(self)
     (board.player,board.opponent) = (board.opponent,board.player)
-    if self.won():
+    if board.won():
       return 1
     return 0
   

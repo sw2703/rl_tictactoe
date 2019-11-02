@@ -5,10 +5,11 @@
 import random
 import sys
 if sys.version_info >= (3, 0):
-  from tkinter import Tk, Button
+  from tkinter import Tk, Button, messagebox
   from tkinter.font import Font
 else:
   from Tkinter import Tk, Button
+  import tkMessagebox as messagebox
   from tkFont import Font
 from copy import deepcopy
 
@@ -32,34 +33,6 @@ class Board:
     board.fields[x,y] = board.player
     (board.player,board.opponent) = (board.opponent,board.player)
     return board
-  
-  def __minimax(self, player):
-    if self.won():
-      if player:
-        return (-1,None)
-      else:
-        return (+1,None)
-    elif self.tied():
-      return (0,None)
-    elif player:
-      best = (-2,None)
-      for x,y in self.fields:
-        if self.fields[x,y]==self.empty:
-          value = self.move(x,y).__minimax(not player)[0]
-          if value>best[0]:
-            best = (value,(x,y))
-      return best
-    else:
-      best = (+2,None)
-      for x,y in self.fields:
-        if self.fields[x,y]==self.empty:
-          value = self.move(x,y).__minimax(not player)[0]
-          if value<best[0]:
-            best = (value,(x,y))
-      return best
-  
-  def best(self):
-    return self.__minimax(True)[1]
   
   def filled(self):
     for (x,y) in self.fields:
@@ -184,6 +157,7 @@ class GUI:
     if winning:
       for x,y in winning:
         self.buttons[x,y]['disabledforeground'] = 'red'
+      messagebox.showinfo("Game Finished", "Computer wins")
       for x,y in self.buttons:
         self.buttons[x,y]['state'] = 'disabled'
     for (x,y) in self.board.fields:

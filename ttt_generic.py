@@ -35,13 +35,17 @@ class Engine:
             state: the current state
         Returns:
             A state, in which a move has been made
+        Raises:
+            RuntimeError, if the board has already been filled
         """
         legal_positions = []
         for x in range(3):
             for y in range(3):
-                if state.board[x, y] == 0:
+                if state.board[x][y] == 0:
                     legal_positions.append((x,y))
+        if not legal_positions:
+            raise RuntimeError('Cannot make a move on a full board!')
         position = random.choice(legal_positions)
-        state.board[position] = state.turn
+        state.board[position[0]][position[1]] = state.turn
         state.change_turn()
         return state

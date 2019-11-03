@@ -113,6 +113,7 @@ class GUI:
     self.app.title('TicTacToe')
     self.app.resizable(width=False, height=False)
     self.board = Board()
+    self.player = self.board.player
     self.font = Font(family="Helvetica", size=32)
     self.buttons = {}
     for x,y in self.board.fields:
@@ -153,7 +154,10 @@ class GUI:
     if winning:
       for x,y in winning:
         self.buttons[x,y]['disabledforeground'] = 'red'
-      messagebox.showinfo("Game Finished", "Computer wins")
+      if self.board.fields[winning[0]] == self.player:
+        messagebox.showinfo("Game Finished", "Player wins")
+      else:
+        messagebox.showinfo("Game Finished", "Computer wins")
       for x,y in self.buttons:
         self.buttons[x,y]['state'] = 'disabled'
     for (x,y) in self.board.fields:

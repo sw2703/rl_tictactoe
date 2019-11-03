@@ -4,13 +4,9 @@
 
 import random
 import sys
-if sys.version_info >= (3, 0):
-  from tkinter import Tk, Button, messagebox
-  from tkinter.font import Font
-else:
-  from Tkinter import Tk, Button
-  import tkMessagebox as messagebox
-  from tkFont import Font
+assert sys.version_info >= (3, 0)
+from tkinter import Tk, Button, messagebox
+from tkinter.font import Font
 from copy import deepcopy
 
 class Board:

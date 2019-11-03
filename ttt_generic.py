@@ -2,7 +2,7 @@
 """
 Created on Sat Nov  2 22:09:24 2019
 
-@author: daugh
+@author: josephwang
 """
 
 import random
@@ -25,7 +25,6 @@ class State:
             self.turn = 1
         
 class Engine:
-    
     """
     For now, a random move engine. Will be expanded.
     """
@@ -49,3 +48,30 @@ class Engine:
         state.board[position[0]][position[1]] = state.turn
         state.change_turn()
         return state
+    
+class Game:
+    def __init__(self):
+        self.state = State()
+        
+    def judge(self):
+        """
+        Assumes only one player wins. Output is arbitrary if both players have a row/column/diagonal, which should not arise in a real game.
+        It is intentional that this method is separated from the Engine methods to compute rewards.
+        """
+        # horizontal
+        for r in range(3):
+             if self.state.board[r] == [1, 1, 1]:
+                  return 1
+             elif self.state.board[r] == [2, 2, 2]:
+                  return 2
+        # vertical
+        for c in range(3):
+             if self.state.board[0][c] == self.state.board[1][c] == self.state.board[2][c]:
+                  return self.state.board[0][c]
+        # diagonal
+        x = self.state.board[1, 1]
+        if x != 0:
+             if self.state.board[0, 0] == x == self.state.board[2, 2]:
+                  return x
+        return 0
+             

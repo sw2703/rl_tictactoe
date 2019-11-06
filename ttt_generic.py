@@ -55,7 +55,9 @@ class Game:
         
     def judge(self):
         """
-        Assumes only one player wins. Output is arbitrary if both players have a row/column/diagonal, which should not arise in a real game.
+        Returns:
+             1 or 2 if player 1 or 2 wins. -1 for unfinished game. 0 for tie.
+        Assumes at most one player wins. Output is arbitrary if both players have a row/column/diagonal, which should not arise in a real game.
         It is intentional that this method is separated from the Engine methods to compute rewards.
         """
         # horizontal
@@ -66,12 +68,15 @@ class Game:
                   return 2
         # vertical
         for c in range(3):
-             if self.state.board[0][c] == self.state.board[1][c] == self.state.board[2][c]:
+             if self.state.board[0][c] == self.state.board[1][c] == self.state.board[2][c] and self.state.board[0][c] != 0:
                   return self.state.board[0][c]
         # diagonal
-        x = self.state.board[1, 1]
+        x = self.state.board[1][1]
         if x != 0:
-             if self.state.board[0, 0] == x == self.state.board[2, 2]:
+             if self.state.board[0][0] == x == self.state.board[2][2]:
                   return x
-        return 0
+        # tied
+        if (0 not in self.state.board[0]) and (0 not in self.state.board[1]) and (0 not in self.state.board[2]):
+             return 0
+        return -1
              

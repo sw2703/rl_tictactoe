@@ -2,10 +2,10 @@
 """
 Created on Sun Nov  3 07:29:06 2019
 
-@author: daugh
+@author: josephwang
 """
 
-from ttt_generic import State, Engine
+from ttt_generic import State, Engine, Game
 import pytest
 
 def test_move():
@@ -39,3 +39,25 @@ def test_move():
     engine = Engine()
     with pytest.raises(RuntimeError):
         engine.move(state)
+        
+def test_judge():
+     # horizontal
+     game = Game()
+     game.state.board = [[0, 0, 0], [1, 1, 1], [0, 2, 2]]
+     assert game.judge()== 1
+     # vertical
+     game = Game()
+     game.state.board = [[0, 1, 2], [0, 1, 2], [1, 0, 2]]
+     assert game.judge() == 2
+     # diagonal 
+     game = Game()
+     game.state.board = [[1, 0, 2], [0, 1, 0], [0, 2, 1]]
+     assert game.judge() == 1
+     # unfinished game
+     game = Game()
+     game.state.board = [[1, 0, 0], [0, 0, 2], [0, 0, 0]]
+     assert game.judge() == -1
+     # tied game
+     game = Game()
+     game.state.board = [[1, 2, 2], [2, 1, 1], [2, 1, 2]]
+     assert game.judge() == 0

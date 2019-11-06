@@ -6,6 +6,7 @@ Created on Sun Nov  3 07:29:06 2019
 """
 
 from ttt_generic import State, Engine, Game
+
 import pytest
 
 def test_move():

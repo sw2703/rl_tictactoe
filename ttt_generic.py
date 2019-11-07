@@ -44,16 +44,16 @@ class Action:
           self.state.change_turn()
           return self.state
         
-class Engine:
+class Policy:
     """
-    For now, a random move engine. Will be expanded.
+    For now, a random policy. Will be expanded.
     """
-    def move(self, state):
+    def select_move(self, state):
         """
         Input:
             state: the current state
         Returns:
-            A state, in which a move has been made
+            An action
         Raises:
             RuntimeError, if the board has already been filled
         """
@@ -64,10 +64,8 @@ class Engine:
                     legal_positions.append((x,y))
         if not legal_positions:
             raise RuntimeError('Cannot make a move on a full board!')
-        position = random.choice(legal_positions)
-        state.board[position[0]][position[1]] = state.turn
-        state.change_turn()
-        return state
+        move = random.choice(legal_positions)
+        return Action(state, move)
     
 class Game:
     def __init__(self):

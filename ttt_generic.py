@@ -4,7 +4,7 @@ Created on Sat Nov  2 22:09:24 2019
 
 @author: josephwang
 """
-from tkinter import Tk, Button
+from tkinter import Tk, Button, messagebox
 from tkinter.font import Font
 import random
 
@@ -70,7 +70,78 @@ class Policy:
 class Game:
     def __init__(self):
         self.state = State()
-                  
+        self.policy = Policy()
+        self.app = Tk()
+        self.app.title('TicTacToe')
+        self.app.resizable(width=False, height=False)
+        self.font = Font(family="Helvetica", size=32)
+        self.exit_flat = 0
+        self.buttons = {}
+        for x in range(3):
+             for y in range(3):
+                  handler = lambda x=x,y=y: self.human_move(x,y).computer_move()
+                  button = Button(self.app, command=handler, font=self.font, width=2, height=1)
+                  button.grid(row=y, column=x)
+                  self.buttons[x,y] = button
+        self.update()
+        
+    def human_move(self, x, y):
+         """ Move by the human player
+         Input:
+              x, y: coordinates of the move.
+         """
+         self.app.config(cursor="watch")
+         self.app.update()
+         action = Action(self.state, (x, y))
+         if action.is_legal():
+              self.state = action.next_state()
+         self.update()
+         return self
+         
+    def computer_move(self):
+         """ Move by the computer player, following policy
+         """
+         if not self.exit_flat:
+              action = self.policy.select_move(self.state)
+              self.state = action.next_state()
+              self.update()
+              return self
+
+    def update(self):
+         for x in range(3):
+              for y in range(3):
+                   if self.state.board[x][y] == 1:
+                        text = "X"
+                   elif self.state.board[x][y] == 2:
+                        text = "O"
+                   else:
+                        text = ""
+                   self.buttons[x,y]['text'] = text
+                   self.buttons[x,y]['disabledforeground'] = 'black'
+                   if text=="":
+                        self.buttons[x,y]['state'] = 'normal'
+                   else:
+                        self.buttons[x,y]['state'] = 'disabled'
+    
+         game_result = self.judge()  
+         if game_result == 1:
+               messagebox.showinfo("Game Finished", "Player wins")
+               self.exit_flat = 1
+               self.app.destroy()
+               print('done')
+         elif game_result == 2:
+               messagebox.showinfo("Game Finished", "Computer wins")
+               self.exit_flat = 1
+               self.app.destroy()
+               print('done')
+         elif game_result == 0:
+              messagebox.showinfo("Game Finished", "Tied")
+              self.exit_flat = 1
+              self.app.destroy()
+              print('done')
+
+         
+        
     def judge(self):
         """
         Returns:
@@ -93,31 +164,15 @@ class Game:
         if x != 0:
              if self.state.board[0][0] == x == self.state.board[2][2]:
                   return x
+             if self.state.board[0][2] == x == self.state.board[2][0]:
+                  return x
         # tied
         if (0 not in self.state.board[0]) and (0 not in self.state.board[1]) and (0 not in self.state.board[2]):
              return 0
         return -1
+    
+    def mainloop(self):
+         self.app.mainloop()
 
-#class GUI:
-#
-#  def __init__(self):
-#    self.app = Tk()
-#    self.app.title('TicTacToe')
-#    self.app.resizable(width=False, height=False)
-#    self.game = Game()
-#    self.font = Font(family="Helvetica", size=32)
-#    self.buttons = {}
-#
-#    for x in range(3):
-#       for y in range(3):
-#           handler = lambda x=x,y=y: self.move(x,y)
-#           button = Button(self.app, command=handler, font=self.font, width=2, height=1)
-#           button.grid(row=y, column=x)
-#           self.buttons[x,y] = button
-#    handler = lambda: self.reset()
-#    button = Button(self.app, text='reset', command=handler)
-#    button.grid(row=self.board.size+1, column=0, columnspan=self.board.size, sticky="WE")
-#    handler = lambda: None
-#    button = Button(self.app, text='dummy', command=handler)
-#    button.grid(row=self.board.size+2, column=0, columnspan=self.board.size, sticky="WE")
-#    self.update()
+if __name__ == '__main__':
+     Game().mainloop()

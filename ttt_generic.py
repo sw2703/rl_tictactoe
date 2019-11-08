@@ -7,6 +7,7 @@ Created on Sat Nov  2 22:09:24 2019
 from tkinter import Tk, Button, messagebox
 from tkinter.font import Font
 import random
+import time
 
 class State:
     
@@ -45,8 +46,7 @@ class Action:
           return self.state
         
 class Policy:
-    """
-    For now, a random policy. Will be expanded.
+    """ By default, a random policy. Other policies are children of this class.
     """
     def select_move(self, state):
         """
@@ -66,6 +66,15 @@ class Policy:
             raise RuntimeError('Cannot make a move on a full board!')
         move = random.choice(legal_positions)
         return Action(state, move)
+
+class SlowRandomPolicy(Policy, delay: int):
+    """ Random policy with a time delay
+    Input: 
+        delay: seconds to delay for each move.
+    """
+    def select_move(self, state, delay):
+        time.sleep(delay)
+        super().select_move(state)
     
 class Game:
     def __init__(self):

@@ -53,12 +53,12 @@ class RushPolicy(Policy):
                state = ttt_generic.State(board, turn = 1)
                
                try:
-                    self.move_dict[state] = self.rush_move(state)
+                    self.move_dict[state.get_tuple()] = self.rush_move(state)
                except(RuntimeError):
                     pass
                state = ttt_generic.State(board, turn = 2)
                try:
-                    self.move_dict[state] = self.rush_move(state)
+                    self.move_dict[state.get_tuple()] = self.rush_move(state)
                except(RuntimeError):
                     pass
           
@@ -70,7 +70,7 @@ class RushPolicy(Policy):
           raise RuntimeError('Cannot make a move on a full board!')
           
      def select_move(self, state):
-          action = self.move_dict[state]
+          action = self.move_dict[state.get_tuple()]
           return action
 
           

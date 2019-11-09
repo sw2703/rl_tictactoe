@@ -18,6 +18,9 @@ class State:
             self.turn = 2
         else:
             self.turn = 1
+    def get_tuple(self):
+         board_tuple = tuple(tuple(x) for x in self.board)
+         return (board_tuple, self.turn)
 
 class Action:
      

@@ -37,8 +37,8 @@ class SlowRandomPolicy(Policy):
         time.sleep(self.delay)
         return super().select_move(state)
 
-class RushPolicy(Policy):
-     """ Always selects the first available action. Used as initial policy.
+class TabularPolicy(Policy):
+     """ Use a dictionary to store the action chosen from each state.
      """
      def __init__(self):
           self.move_dict = dict()
@@ -68,7 +68,10 @@ class RushPolicy(Policy):
                      if state.board[x][y] == 0:
                           return ttt_generic.Action(state, (x, y))
           raise RuntimeError('Cannot make a move on a full board!')
-          
+
+class RushPolicy(TabularPolicy):
+     """ Always selects the first available action.
+     """          
      def select_move(self, state):
           action = self.move_dict[state.get_tuple()]
           return action

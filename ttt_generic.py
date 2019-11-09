@@ -44,7 +44,7 @@ class Action:
 class Game:
     def __init__(self):
         self.state = State()
-        self.policy = ttt_policies.SlowRandomPolicy(delay=3)
+        self.policy = ttt_policies.RushPolicy()
         self.app = Tk()
         self.app.title('TicTacToe')
         self.app.resizable(width=False, height=False)

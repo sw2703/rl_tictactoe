@@ -10,7 +10,7 @@ from ttt_policies import Policy
 
 import pytest
 
-def test_random_move():
+def test_random_policy():
     """
     Only one possible move.
     """
@@ -33,6 +33,34 @@ def test_random_move():
                 [[1,0,0],[2,2,1],[2,1,2]]
             ]
     assert state.board in expected_boards
+    assert state.turn == 1
+    """
+    Filled board
+    """
+    state = State(board = [[1,2,1],[2,2,1],[1,1,2]], turn = 2)
+    policy = Policy()
+    with pytest.raises(RuntimeError):
+        policy.select_move(state).next_state()
+        
+def test_rush_policy():
+    """
+    Only one possible move.
+    """
+    state = State(board = [[1,2,1],[2,2,1],[0,1,2]], turn = 1)
+    policy = Policy()
+    state = policy.select_move(state).next_state()
+    expected_state = State(board = [[1,2,1],[2,2,1],[1,1,2]], turn = 2)
+    assert state.board == expected_state.board
+    assert state.turn == expected_state.turn
+    
+    """
+    Multiple possible moves.
+    """
+    state = State(board = [[1,0,0],[2,2,1],[0,1,2]], turn = 2)
+    policy = Policy()
+    state = policy.select_move(state).next_state()
+    expected_board = [[1,2,0],[2,2,1],[0,1,2]]
+    assert state.board == expected_board
     assert state.turn == 1
     """
     Filled board

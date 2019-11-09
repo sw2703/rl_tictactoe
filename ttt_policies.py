@@ -35,3 +35,13 @@ class SlowRandomPolicy(Policy):
     def select_move(self, state):
         time.sleep(self.delay)
         return super().select_move(state)
+
+class RushPolicy(Policy):
+     """ Always selects the first available action. Used as initial policy.
+     """
+     def select_move(self, state):
+          for x in range(3):
+                 for y in range(3):
+                     if state.board[x][y] == 0:
+                          return ttt_generic.Action(state, (x, y))
+          raise RuntimeError('Cannot make a move on a full board!')

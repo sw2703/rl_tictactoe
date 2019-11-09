@@ -6,7 +6,7 @@ Created on Sun Nov  3 07:29:06 2019
 """
 
 from ttt_generic import State, Game
-from ttt_policies import Policy
+from ttt_policies import Policy, RushPolicy
 
 import pytest
 
@@ -47,7 +47,7 @@ def test_rush_policy():
     Only one possible move.
     """
     state = State(board = [[1,2,1],[2,2,1],[0,1,2]], turn = 1)
-    policy = Policy()
+    policy = RushPolicy()
     state = policy.select_move(state).next_state()
     expected_state = State(board = [[1,2,1],[2,2,1],[1,1,2]], turn = 2)
     assert state.board == expected_state.board
@@ -57,7 +57,7 @@ def test_rush_policy():
     Multiple possible moves.
     """
     state = State(board = [[1,0,0],[2,2,1],[0,1,2]], turn = 2)
-    policy = Policy()
+    policy = RushPolicy()
     state = policy.select_move(state).next_state()
     expected_board = [[1,2,0],[2,2,1],[0,1,2]]
     assert state.board == expected_board

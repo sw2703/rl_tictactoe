@@ -1,13 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Nov  2 22:09:24 2019
-
-@author: josephwang
-"""
 from tkinter import Tk, Button, messagebox
 from tkinter.font import Font
-import random
-import time
+import ttt_policies
 
 class State:
     
@@ -44,45 +37,11 @@ class Action:
           self.state.board[self.move[0]][self.move[1]] = self.state.turn
           self.state.change_turn()
           return self.state
-        
-class Policy:
-    """ By default, a random policy. Other policies are children of this class.
-    """
-    def select_move(self, state):
-        """
-        Input:
-            state: the current state
-        Returns:
-            An action
-        Raises:
-            RuntimeError, if the board has already been filled
-        """
-        legal_positions = []
-        for x in range(3):
-            for y in range(3):
-                if state.board[x][y] == 0:
-                    legal_positions.append((x,y))
-        if not legal_positions:
-            raise RuntimeError('Cannot make a move on a full board!')
-        move = random.choice(legal_positions)
-        return Action(state, move)
-
-class SlowRandomPolicy(Policy):
-    """ Random policy with a time delay
-    Input: 
-        delay: seconds to delay for each move.
-    """
-    def __init__(self, delay):
-         self.delay = delay
-    
-    def select_move(self, state):
-        time.sleep(self.delay)
-        return super().select_move(state)
     
 class Game:
     def __init__(self):
         self.state = State()
-        self.policy = SlowRandomPolicy(delay=3)
+        self.policy = ttt_policies.SlowRandomPolicy(delay=3)
         self.app = Tk()
         self.app.title('TicTacToe')
         self.app.resizable(width=False, height=False)
@@ -111,7 +70,6 @@ class Game:
     def computer_move(self):
          """ Move by the computer player, following policy
          """
-         time.sleep(3)
          if not self.exit_flag:
               action = self.policy.select_move(self.state)
               self.state = action.next_state()

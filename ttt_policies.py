@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import pickle
 import time
 import ttt_generic
 
@@ -68,6 +69,15 @@ class TabularPolicy(Policy):
                      if state.board[x][y] == 0:
                           return ttt_generic.Action(state, (x, y))
           raise RuntimeError('Cannot make a move on a full board!')
+          
+     def store_dict(self, path):
+          pickle.dump(self.move_dict, open(path, 'wb'))
+          
+     def read_dict(self, path):
+          try: 
+               self.move_dict = pickle.load(open(path, 'rb'))
+          except:
+               raise RuntimeError('The saved mvoe_dict cannot be read. Using default dict instead.')
 
 class RushPolicy(TabularPolicy):
      """ Always selects the first available action.
@@ -75,5 +85,7 @@ class RushPolicy(TabularPolicy):
      def select_move(self, state):
           action = self.move_dict[state.get_tuple()]
           return action
+     
+
 
           

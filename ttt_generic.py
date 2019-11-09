@@ -7,6 +7,7 @@ Created on Sat Nov  2 22:09:24 2019
 from tkinter import Tk, Button, messagebox
 from tkinter.font import Font
 import random
+import time
 
 class State:
     
@@ -45,8 +46,7 @@ class Action:
           return self.state
         
 class Policy:
-    """
-    For now, a random policy. Will be expanded.
+    """ By default, a random policy. Other policies are children of this class.
     """
     def select_move(self, state):
         """
@@ -66,16 +66,28 @@ class Policy:
             raise RuntimeError('Cannot make a move on a full board!')
         move = random.choice(legal_positions)
         return Action(state, move)
+
+class SlowRandomPolicy(Policy):
+    """ Random policy with a time delay
+    Input: 
+        delay: seconds to delay for each move.
+    """
+    def __init__(self, delay):
+         self.delay = delay
+    
+    def select_move(self, state):
+        time.sleep(self.delay)
+        return super().select_move(state)
     
 class Game:
     def __init__(self):
         self.state = State()
-        self.policy = Policy()
+        self.policy = SlowRandomPolicy(delay=3)
         self.app = Tk()
         self.app.title('TicTacToe')
         self.app.resizable(width=False, height=False)
         self.font = Font(family="Helvetica", size=32)
-        self.exit_flat = 0
+        self.exit_flag = 0
         self.buttons = {}
         for x in range(3):
              for y in range(3):
@@ -83,14 +95,12 @@ class Game:
                   button = Button(self.app, command=handler, font=self.font, width=2, height=1)
                   button.grid(row=y, column=x)
                   self.buttons[x,y] = button
-        self.update()
         
     def human_move(self, x, y):
          """ Move by the human player
          Input:
               x, y: coordinates of the move.
          """
-         self.app.config(cursor="watch")
          self.app.update()
          action = Action(self.state, (x, y))
          if action.is_legal():
@@ -101,7 +111,8 @@ class Game:
     def computer_move(self):
          """ Move by the computer player, following policy
          """
-         if not self.exit_flat:
+         time.sleep(3)
+         if not self.exit_flag:
               action = self.policy.select_move(self.state)
               self.state = action.next_state()
               self.update()
@@ -122,25 +133,24 @@ class Game:
                         self.buttons[x,y]['state'] = 'normal'
                    else:
                         self.buttons[x,y]['state'] = 'disabled'
-    
+                   self.buttons[x,y].update()
+          
          game_result = self.judge()  
          if game_result == 1:
                messagebox.showinfo("Game Finished", "Player wins")
-               self.exit_flat = 1
+               self.exit_flag = 1
                self.app.destroy()
                print('done')
          elif game_result == 2:
                messagebox.showinfo("Game Finished", "Computer wins")
-               self.exit_flat = 1
+               self.exit_flag = 1
                self.app.destroy()
                print('done')
          elif game_result == 0:
               messagebox.showinfo("Game Finished", "Tied")
-              self.exit_flat = 1
+              self.exit_flag = 1
               self.app.destroy()
               print('done')
-
-         
         
     def judge(self):
         """

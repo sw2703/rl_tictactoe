@@ -5,11 +5,12 @@ Created on Sun Nov  3 07:29:06 2019
 @author: josephwang
 """
 
-from ttt_generic import State, Action, Policy, Game
+from ttt_generic import State, Game
+from ttt_policies import Policy
 
 import pytest
 
-def test_move():
+def test_random_move():
     """
     Only one possible move.
     """

@@ -76,14 +76,13 @@ class SlowRandomPolicy(Policy):
          self.delay = delay
     
     def select_move(self, state):
-        print('select_move')
         time.sleep(self.delay)
         return super().select_move(state)
     
 class Game:
     def __init__(self):
         self.state = State()
-        self.policy = Policy()
+        self.policy = SlowRandomPolicy(delay=3)
         self.app = Tk()
         self.app.title('TicTacToe')
         self.app.resizable(width=False, height=False)
@@ -96,15 +95,12 @@ class Game:
                   button = Button(self.app, command=handler, font=self.font, width=2, height=1)
                   button.grid(row=y, column=x)
                   self.buttons[x,y] = button
-        self.update()
         
     def human_move(self, x, y):
          """ Move by the human player
          Input:
               x, y: coordinates of the move.
          """
-         print('human_move')
-         self.app.config(cursor="watch")
          self.app.update()
          action = Action(self.state, (x, y))
          if action.is_legal():
@@ -115,7 +111,6 @@ class Game:
     def computer_move(self):
          """ Move by the computer player, following policy
          """
-         print('computer_move')
          time.sleep(3)
          if not self.exit_flag:
               action = self.policy.select_move(self.state)
@@ -124,7 +119,6 @@ class Game:
               return self
 
     def update(self):
-         print('update')
          for x in range(3):
               for y in range(3):
                    if self.state.board[x][y] == 1:
@@ -139,7 +133,8 @@ class Game:
                         self.buttons[x,y]['state'] = 'normal'
                    else:
                         self.buttons[x,y]['state'] = 'disabled'
-    
+                   self.buttons[x,y].update()
+          
          game_result = self.judge()  
          if game_result == 1:
                messagebox.showinfo("Game Finished", "Player wins")

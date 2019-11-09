@@ -67,14 +67,18 @@ class Policy:
         move = random.choice(legal_positions)
         return Action(state, move)
 
-class SlowRandomPolicy(Policy, delay: int):
+class SlowRandomPolicy(Policy):
     """ Random policy with a time delay
     Input: 
         delay: seconds to delay for each move.
     """
-    def select_move(self, state, delay):
-        time.sleep(delay)
-        super().select_move(state)
+    def __init__(self, delay):
+         self.delay = delay
+    
+    def select_move(self, state):
+        print('select_move')
+        time.sleep(self.delay)
+        return super().select_move(state)
     
 class Game:
     def __init__(self):
@@ -84,7 +88,7 @@ class Game:
         self.app.title('TicTacToe')
         self.app.resizable(width=False, height=False)
         self.font = Font(family="Helvetica", size=32)
-        self.exit_flat = 0
+        self.exit_flag = 0
         self.buttons = {}
         for x in range(3):
              for y in range(3):
@@ -99,6 +103,7 @@ class Game:
          Input:
               x, y: coordinates of the move.
          """
+         print('human_move')
          self.app.config(cursor="watch")
          self.app.update()
          action = Action(self.state, (x, y))
@@ -110,13 +115,16 @@ class Game:
     def computer_move(self):
          """ Move by the computer player, following policy
          """
-         if not self.exit_flat:
+         print('computer_move')
+         time.sleep(3)
+         if not self.exit_flag:
               action = self.policy.select_move(self.state)
               self.state = action.next_state()
               self.update()
               return self
 
     def update(self):
+         print('update')
          for x in range(3):
               for y in range(3):
                    if self.state.board[x][y] == 1:
@@ -135,21 +143,19 @@ class Game:
          game_result = self.judge()  
          if game_result == 1:
                messagebox.showinfo("Game Finished", "Player wins")
-               self.exit_flat = 1
+               self.exit_flag = 1
                self.app.destroy()
                print('done')
          elif game_result == 2:
                messagebox.showinfo("Game Finished", "Computer wins")
-               self.exit_flat = 1
+               self.exit_flag = 1
                self.app.destroy()
                print('done')
          elif game_result == 0:
               messagebox.showinfo("Game Finished", "Tied")
-              self.exit_flat = 1
+              self.exit_flag = 1
               self.app.destroy()
               print('done')
-
-         
         
     def judge(self):
         """

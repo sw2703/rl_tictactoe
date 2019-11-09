@@ -6,7 +6,7 @@ Created on Sun Nov  3 07:29:06 2019
 """
 
 from ttt_generic import State, Game
-from ttt_policies import Policy, RushPolicy
+from ttt_policies import Policy, RushPolicy, TabularPolicy
 
 import pytest
 

@@ -2,7 +2,7 @@ import numpy as np
 import random
 import pickle
 import time
-import ttt_generic
+import ttt_play
 
 class Policy:
     """ By default, a random policy. Other policies are children of this class.
@@ -24,7 +24,7 @@ class Policy:
         if not legal_positions:
             raise RuntimeError('Cannot make a move on a full board!')
         move = random.choice(legal_positions)
-        return ttt_generic.Action(state, move)
+        return ttt_play.Action(state, move)
 
 class SlowRandomPolicy(Policy):
     """ Random policy with a time delay
@@ -51,13 +51,13 @@ class TabularPolicy(Policy):
                          [int(num_str[3]), int(num_str[4]), int(num_str[5])],
                          [int(num_str[6]), int(num_str[7]), int(num_str[8])]
                          ]
-               state = ttt_generic.State(board, turn = 1)
+               state = ttt_play.State(board, turn = 1)
                
                try:
                     self.move_dict[state.get_tuple()] = self.rush_move(state)
                except(RuntimeError):
                     pass
-               state = ttt_generic.State(board, turn = 2)
+               state = ttt_play.State(board, turn = 2)
                try:
                     self.move_dict[state.get_tuple()] = self.rush_move(state)
                except(RuntimeError):
@@ -67,7 +67,7 @@ class TabularPolicy(Policy):
           for x in range(3):
                  for y in range(3):
                      if state.board[x][y] == 0:
-                          return ttt_generic.Action(state, (x, y))
+                          return ttt_play.Action(state, (x, y))
           raise RuntimeError('Cannot make a move on a full board!')
           
      def store_dict(self, path):

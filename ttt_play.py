@@ -37,10 +37,6 @@ class State:
         for s in itertools.chain.from_iterable(self.board):
              num_str += str(s)
         return int(num_str, 3)
-            
-    def get_tuple(self):
-         board_tuple = tuple(tuple(x) for x in self.board)
-         return (board_tuple, self.turn)
 
 class Action:
      

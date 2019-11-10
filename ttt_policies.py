@@ -57,17 +57,17 @@ class TabularPolicy(Policy):
                
                state = ttt_play.State(board, turn = 1)
                if self.has_v_dict:
-                    self.v_dict[state.get_tuple()] = 0
+                    self.v_dict[state.get_num()] = 0
                try:
-                    self.move_dict[state.get_tuple()] = self.rush_move(state)
+                    self.move_dict[state.get_num()] = self.rush_move(state)
                except(RuntimeError):
                     pass
                
                state = ttt_play.State(board, turn = 2)
                if self.has_v_dict:
-                    self.v_dict[state.get_tuple()] = 0
+                    self.v_dict[state.get_num()] = 0
                try:
-                    self.move_dict[state.get_tuple()] = self.rush_move(state)
+                    self.move_dict[state.get_num()] = self.rush_move(state)
                except(RuntimeError):
                     pass
           
@@ -91,7 +91,7 @@ class RushPolicy(TabularPolicy):
      """ Always selects the first available action.
      """          
      def select_move(self, state):
-          action = self.move_dict[state.get_tuple()]
+          action = self.move_dict[state.get_num()]
           return action    
 
           

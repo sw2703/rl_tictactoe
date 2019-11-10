@@ -11,3 +11,6 @@ class Training:
                self.read_path = read_path
           else:
                self.read_path = write_path
+     
+     def SelfPlay(policy_1, policy_2):
+          

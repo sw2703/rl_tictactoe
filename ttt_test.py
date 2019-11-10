@@ -12,16 +12,22 @@ import pytest
 def test_initialize_state_from_base10():
     """ Legitimate number
     """
-    num = int('1012012012', 3)
+    num = int('1012012000', 3)
     state = State(from_base10 = num)
-    assert state.board == [[0, 1, 2], [0, 1, 2], [0, 1, 2]]
+    assert state.board == [[0, 1, 2], [0, 1, 2], [0, 0, 0]]
     assert state.turn == 1
     
     """ Illegitimate number
     """
     num = int('120120120', 3)
     with pytest.raises(ValueError):
-        state = State(from_base10 = num)
+        state = State(from_base10 = num)  
+
+def test_get_num_from_state():
+    state = State(board = [[0, 1, 2], [0, 1, 2], [0, 0, 0]], turn = 2)
+    num = state.get_num()
+    assert num == int('2012012000', 3)
+    
 
 def test_random_policy():
     """

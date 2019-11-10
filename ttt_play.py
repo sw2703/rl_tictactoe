@@ -1,5 +1,6 @@
 from tkinter import Tk, Button, messagebox
 from tkinter.font import Font
+import itertools
 import numpy as np
 import ttt_policies
 
@@ -30,6 +31,12 @@ class State:
             self.turn = 2
         else:
             self.turn = 1
+           
+    def get_num(self):
+        num_str= str(self.turn)
+        for s in itertools.chain.from_iterable(self.board):
+             num_str += str(s)
+        return int(num_str, 3)
             
     def get_tuple(self):
          board_tuple = tuple(tuple(x) for x in self.board)

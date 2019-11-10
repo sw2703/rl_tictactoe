@@ -84,8 +84,6 @@ class RushPolicy(TabularPolicy):
      """          
      def select_move(self, state):
           action = self.move_dict[state.get_tuple()]
-          return action
-     
-
+          return action    
 
           

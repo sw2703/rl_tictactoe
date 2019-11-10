@@ -40,11 +40,50 @@ class Action:
           self.state.board[self.move[0]][self.move[1]] = self.state.turn
           self.state.change_turn()
           return self.state
+
+class Game():
+     def __init__(self):
+          self.state = State()
+          self.policy = ttt_policies.RushPolicy()
+
+     def computer_move(self):
+         """ Move by the computer player, following policy
+         """
+         action = self.policy.select_move(self.state)
+         self.state = action.next_state()
+
+     def judge(self):
+        """
+        Returns:
+             1 or 2 if player 1 or 2 wins. -1 for unfinished game. 0 for tie.
+        Assumes at most one player wins. Output is arbitrary if both players have a row/column/diagonal, which should not arise in a real game.
+        It is intentional that this method is separated from the Engine methods to compute rewards.
+        """
+        # horizontal
+        for r in range(3):
+             if self.state.board[r] == [1, 1, 1]:
+                  return 1
+             elif self.state.board[r] == [2, 2, 2]:
+                  return 2
+        # vertical
+        for c in range(3):
+             if self.state.board[0][c] == self.state.board[1][c] == self.state.board[2][c] and self.state.board[0][c] != 0:
+                  return self.state.board[0][c]
+        # diagonal
+        x = self.state.board[1][1]
+        if x != 0:
+             if self.state.board[0][0] == x == self.state.board[2][2]:
+                  return x
+             if self.state.board[0][2] == x == self.state.board[2][0]:
+                  return x
+        # tied
+        if (0 not in self.state.board[0]) and (0 not in self.state.board[1]) and (0 not in self.state.board[2]):
+             return 0
+        return -1          
     
-class Game:
+class GUIGame(Game):
     def __init__(self):
-        self.state = State()
-        self.policy = ttt_policies.RushPolicy()
+        super().__init__()
         self.app = Tk()
         self.app.title('TicTacToe')
         self.app.resizable(width=False, height=False)
@@ -74,10 +113,8 @@ class Game:
          """ Move by the computer player, following policy
          """
          if not self.exit_flag:
-              action = self.policy.select_move(self.state)
-              self.state = action.next_state()
+              super().computer_move()
               self.update()
-              return self
 
     def update(self):
          for x in range(3):
@@ -113,37 +150,10 @@ class Game:
               self.app.destroy()
               print('done')
         
-    def judge(self):
-        """
-        Returns:
-             1 or 2 if player 1 or 2 wins. -1 for unfinished game. 0 for tie.
-        Assumes at most one player wins. Output is arbitrary if both players have a row/column/diagonal, which should not arise in a real game.
-        It is intentional that this method is separated from the Engine methods to compute rewards.
-        """
-        # horizontal
-        for r in range(3):
-             if self.state.board[r] == [1, 1, 1]:
-                  return 1
-             elif self.state.board[r] == [2, 2, 2]:
-                  return 2
-        # vertical
-        for c in range(3):
-             if self.state.board[0][c] == self.state.board[1][c] == self.state.board[2][c] and self.state.board[0][c] != 0:
-                  return self.state.board[0][c]
-        # diagonal
-        x = self.state.board[1][1]
-        if x != 0:
-             if self.state.board[0][0] == x == self.state.board[2][2]:
-                  return x
-             if self.state.board[0][2] == x == self.state.board[2][0]:
-                  return x
-        # tied
-        if (0 not in self.state.board[0]) and (0 not in self.state.board[1]) and (0 not in self.state.board[2]):
-             return 0
-        return -1
+
     
     def mainloop(self):
          self.app.mainloop()
 
 if __name__ == '__main__':
-     Game().mainloop()
+     GUIGame().mainloop()

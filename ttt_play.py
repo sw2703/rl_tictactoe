@@ -1,23 +1,34 @@
 from tkinter import Tk, Button, messagebox
 from tkinter.font import Font
+import numpy as np
 import ttt_policies
 
 class State:
     
-    def __init__(self, board=[[0,0,0],[0,0,0],[0,0,0]], turn = 1):
+    def __init__(self, board=[[0,0,0],[0,0,0],[0,0,0]], turn = 1, from_base10 = None):
         """
         Input:
             board: 0 for empty, 1 and 2 for players 1 and 2
             turn:  1 or 2, denoting who should make the next move
         """
-        self.board = board
-        self.turn = turn
+        if not from_base10:
+             self.board = board
+             self.turn = turn
+        else:
+             num_str = np.base_repr(from_base10, base = 3)
+             self.turn = int(num_str[0])
+             self.board = [
+                       [int(num_str[1]), int(num_str[2]), int(num_str[3])],
+                       [int(num_str[4]), int(num_str[5]), int(num_str[6])],
+                       [int(num_str[7]), int(num_str[8]), int(num_str[9])]
+                       ]             
         
     def change_turn(self):
         if self.turn == 1:
             self.turn = 2
         else:
             self.turn = 1
+            
     def get_tuple(self):
          board_tuple = tuple(tuple(x) for x in self.board)
          return (board_tuple, self.turn)

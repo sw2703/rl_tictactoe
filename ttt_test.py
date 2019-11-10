@@ -7,8 +7,21 @@ Created on Sun Nov  3 07:29:06 2019
 
 from ttt_play import State, Game
 from ttt_policies import Policy, RushPolicy
-
 import pytest
+
+def test_initialize_state_from_base10():
+    """ Legitimate number
+    """
+    num = int('1012012012', 3)
+    state = State(from_base10 = num)
+    assert state.board == [[0, 1, 2], [0, 1, 2], [0, 1, 2]]
+    assert state.turn == 1
+    
+    """ Illegitimate number
+    """
+    num = int('120120120', 3)
+    with pytest.raises(ValueError):
+        state = State(from_base10 = num)
 
 def test_random_policy():
     """

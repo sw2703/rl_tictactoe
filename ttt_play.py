@@ -16,6 +16,8 @@ class State:
              self.turn = turn
         else:
              num_str = np.base_repr(from_base10, base = 3)
+             if len(num_str) != 10:  # expect 1 digit for turn and 9 for board
+                  raise ValueError('Bad numerical representation of board: %s.' % num_str)
              self.turn = int(num_str[0])
              self.board = [
                        [int(num_str[1]), int(num_str[2]), int(num_str[3])],

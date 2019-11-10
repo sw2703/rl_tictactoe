@@ -41,7 +41,10 @@ class SlowRandomPolicy(Policy):
 class TabularPolicy(Policy):
      """ Use a dictionary to store the action chosen from each state.
      """
-     def __init__(self):
+     def __init__(self, has_v_dict = False):
+          self.has_v_dict = has_v_dict
+          if self.has_v_dict:
+               self.v_dict = dict()
           self.move_dict = dict()
           for i in range(3**9):
                num_str = np.base_repr(i, base = 3)
@@ -51,13 +54,18 @@ class TabularPolicy(Policy):
                          [int(num_str[3]), int(num_str[4]), int(num_str[5])],
                          [int(num_str[6]), int(num_str[7]), int(num_str[8])]
                          ]
-               state = ttt_play.State(board, turn = 1)
                
+               state = ttt_play.State(board, turn = 1)
+               if self.has_v_dict:
+                    self.v_dict[state.get_tuple()] = 0
                try:
                     self.move_dict[state.get_tuple()] = self.rush_move(state)
                except(RuntimeError):
                     pass
+               
                state = ttt_play.State(board, turn = 2)
+               if self.has_v_dict:
+                    self.v_dict[state.get_tuple()] = 0
                try:
                     self.move_dict[state.get_tuple()] = self.rush_move(state)
                except(RuntimeError):

@@ -1,4 +1,6 @@
-class Training:
+from ttt_play import Game
+
+class Train:
      def __init__(self, n_game, read_path = None, write_path):
           """
           Input:
@@ -6,11 +8,9 @@ class Training:
                read_path, write_path: paths for reading or saving the model
           """
           self.n_game = n_game
+          self.read_path = read_path
           self.write_path = write_path
-          if read_path:
-               self.read_path = read_path
-          else:
-               self.read_path = write_path
-     
-     def SelfPlay(policy_1, policy_2):
+          self.SelfPlay()
+               
+     def SelfPlay(self):
           

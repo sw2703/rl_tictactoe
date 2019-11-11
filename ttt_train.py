@@ -1,8 +1,9 @@
-from ttt_play import Game, State
-from ttt_policies import Policy, TabularPolicy
+from ttt_play import State
+from ttt_policies import TabularPolicy, RushPolicy
+import numpy as np
 
 class Train:
-     def __init__(self, n_game, read_path = None, write_path):
+     def __init__(self, n_game, write_path, read_path = None):
           """
           Input:
                n_game: number of games to train for
@@ -22,13 +23,35 @@ class Train:
           policy_2 = RushPolicy()
           
           theta = 0.01
-          for _ in range(n_game):
+          for _ in range(self.n_game):
                delta = 0
                for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
                     v = policy_1.v_dict[num]
                     s = State(from_base10 = num)
-                    opponent_state = policy_1.select_move(s).next_state()
-                    if 
-                    s_prime = policy_2.select_move(opponent_state).next_state()
-                    policy_1.v_dict[num] = 
                     
+                    
+                    
+                    if s.judge()
+                    
+                    opponent_state = policy_1.select_move(s).next_state()
+                    
+                    temp = opponent_state.judge()
+                    if temp == 1:
+                         r = 1
+                    elif temp == 0:
+                         r = 0
+                    else:
+                         s_prime = policy_2.select_move(opponent_state).next_state()
+                         if s_prime.judge() == 2:
+                              r = -1
+                         else:
+                              r = 0
+                              
+                    policy_1.v_dict[num] = r + policy_1.v_dict[s_prime.get_num()]
+                    delta = max(delta, np.abs(v - policy_1.v_dict[num]))
+                    
+               if delta < theta:
+                    break
+               
+if __name__ == '__main__':
+     Train(n_game = 1, write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe\policy_evaluation.pkl')               

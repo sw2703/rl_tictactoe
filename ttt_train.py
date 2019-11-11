@@ -28,18 +28,21 @@ class Train:
                for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
                     v = policy_1.v_dict[num]
                     s = State(from_base10 = num)
-                    r = s.get_reward()
-                    if r == 0:
-                         opponent_state = policy_1.select_move(s).next_state()
-                         r = opponent_state.get_reward()
-                         if r == 0:
-                              s_prime = policy_2.select_move(opponent_state).next_state()
-                              if s_prime.judge() == 2:
-                                   r = -1
-                              else:
-                                   r = 0
+                    
+                    # terminal state, v function always zero
+                    if s.is_terminal():
+                         policy_1.v_dict[num] = 0
+                         continue
+                    
+                    opponent_state = policy_1.select_move(s).next_state()
+                    r = opponent_state.get_reward()
+                    if opponent_state.is_terminal():
+                         v_s_prime = 0
+                    else:
+                         s_prime = policy_2.select_move(opponent_state).next_state()
+                         v_s_prime = policy_1.v_dict[s_prime.get_num()]
                               
-                    policy_1.v_dict[num] = r + policy_1.v_dict[s_prime.get_num()]
+                    policy_1.v_dict[num] = r + v_s_prime
                     delta = max(delta, np.abs(v - policy_1.v_dict[num]))
                     
                if delta < theta:

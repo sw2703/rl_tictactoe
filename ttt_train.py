@@ -29,8 +29,6 @@ class Train:
                     v = policy_1.v_dict[num]
                     s = State(from_base10 = num)
                     r = s.get_reward()
-                    if num == 50183:
-                         print(r)
                     if r == 0:
                          opponent_state = policy_1.select_move(s).next_state()
                          r = opponent_state.get_reward()

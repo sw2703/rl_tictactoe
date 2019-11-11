@@ -37,6 +37,35 @@ class State:
         for s in itertools.chain.from_iterable(self.board):
              num_str += str(s)
         return int(num_str, 3)
+   
+    def judge(self):
+        """
+        Returns:
+             1 or 2 if player 1 or 2 wins. -1 for unfinished game. 0 for tie.
+        Assumes at most one player wins. Output is arbitrary if both players have a row/column/diagonal, which should not arise in a real game.
+        It is intentional that this method is separated from the Engine methods to compute rewards.
+        """
+        # horizontal
+        for r in range(3):
+             if self.board[r] == [1, 1, 1]:
+                  return 1
+             elif self.board[r] == [2, 2, 2]:
+                  return 2
+        # vertical
+        for c in range(3):
+             if self.board[0][c] == self.board[1][c] == self.board[2][c] and self.board[0][c] != 0:
+                  return self.board[0][c]
+        # diagonal
+        x = self.board[1][1]
+        if x != 0:
+             if self.board[0][0] == x == self.board[2][2]:
+                  return x
+             if self.board[0][2] == x == self.board[2][0]:
+                  return x
+        # tied
+        if (0 not in self.board[0]) and (0 not in self.board[1]) and (0 not in self.board[2]):
+             return 0
+        return -1  
 
 class Action:
      
@@ -75,27 +104,7 @@ class Game():
         Assumes at most one player wins. Output is arbitrary if both players have a row/column/diagonal, which should not arise in a real game.
         It is intentional that this method is separated from the Engine methods to compute rewards.
         """
-        # horizontal
-        for r in range(3):
-             if self.state.board[r] == [1, 1, 1]:
-                  return 1
-             elif self.state.board[r] == [2, 2, 2]:
-                  return 2
-        # vertical
-        for c in range(3):
-             if self.state.board[0][c] == self.state.board[1][c] == self.state.board[2][c] and self.state.board[0][c] != 0:
-                  return self.state.board[0][c]
-        # diagonal
-        x = self.state.board[1][1]
-        if x != 0:
-             if self.state.board[0][0] == x == self.state.board[2][2]:
-                  return x
-             if self.state.board[0][2] == x == self.state.board[2][0]:
-                  return x
-        # tied
-        if (0 not in self.state.board[0]) and (0 not in self.state.board[1]) and (0 not in self.state.board[2]):
-             return 0
-        return -1          
+        return self.state.judge()         
     
 class GUIGame(Game):
     def __init__(self):

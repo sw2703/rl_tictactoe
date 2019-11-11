@@ -66,7 +66,17 @@ class State:
         if (0 not in self.board[0]) and (0 not in self.board[1]) and (0 not in self.board[2]):
              return 0
         return -1  
-
+   
+    def get_reward(self):
+         """ Return the reward for player 1
+         """
+         temp = self.judge()
+         if temp == 1:
+              return 1
+         elif temp == 2:
+              return -1
+         return 0
+                   
 class Action:
      
      def __init__(self, state: State, move: (int, int)):

@@ -9,6 +9,7 @@ from ttt_play import State, Game
 from ttt_policies import Policy, RushPolicy
 import pytest
 
+
 def test_initialize_state_from_base10():
     """ Legitimate number
     """
@@ -23,11 +24,22 @@ def test_initialize_state_from_base10():
     with pytest.raises(ValueError):
         state = State(from_base10 = num)  
 
+
 def test_get_num_from_state():
     state = State(board = [[0, 1, 2], [0, 1, 2], [0, 0, 0]], turn = 2)
     num = state.get_num()
     assert num == int('2012012000', 3)
+    state = State(board = [[1, 2, 1], [2, 1, 2], [1, 2, 2]])
+    num = state.get_num()
+    assert num == int('1121212122', 3)
     
+
+def test_is_terminal():
+  state = State(board = [[0, 2, 1], [0, 1, 2], [1, 2, 2]])
+  assert not state.is_terminal()
+  state = State(board = [[1, 2, 1], [2, 1, 2], [1, 2, 2]])
+  assert state.is_terminal()
+
 
 def test_random_policy():
     """

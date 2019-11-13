@@ -25,8 +25,10 @@ class State:
                        [int(num_str[4]), int(num_str[5]), int(num_str[6])],
                        [int(num_str[7]), int(num_str[8]), int(num_str[9])]
                        ]       
+             
+             
     def is_terminal(self):
-         return (0 not in self.get_num())
+         return ('0' not in np.base_repr(self.get_num(), 3))
         
     def change_turn(self):
         if self.turn == 1:

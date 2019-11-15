@@ -22,14 +22,15 @@ class Train:
              with regular states, no afterstates
           """
           if self.read_path:
-               policy_1 = pickle.load(open(self.read_path, 'rb'))
+               policy_1, i_epoch = pickle.load(open(self.read_path, 'rb'))
           else:
                policy_1 = TabularPolicy(has_v_dict = True)
+               i_epoch = 0
           policy_2 = RushPolicy()
           
           theta = 0.01
           t = time.time()
-          for i_game in range(self.n_game):
+          while True:
                delta = 0
                for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
                     v = policy_1.v_dict[num]
@@ -50,14 +51,16 @@ class Train:
                               
                     policy_1.v_dict[num] = r + v_s_prime
                     delta = max(delta, np.abs(v - policy_1.v_dict[num]))
-                    
+               
+               i_epoch += 1
+               
                if delta < theta:
                     break
                
                if time.time() - t > 10:
                     t = time.time()
-                    print("Trained %i games so far." % i_game)
-                    pickle.dump(policy_1, open(self.write_path, "wb" ) )
+                    print("Trained %i epochs so far." % i_epoch)
+                    pickle.dump((policy_1, i_epoch), open(self.write_path, "wb" ) )
                
 if __name__ == '__main__':
-     Train(n_game = 1000, write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               
+     Train(n_game = 1000, read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               

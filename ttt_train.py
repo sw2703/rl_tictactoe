@@ -21,7 +21,10 @@ class Train:
              Against rush opponent
              with regular states, no afterstates
           """
-          policy_1 = TabularPolicy(has_v_dict = True)
+          if self.read_path:
+               policy_1 = pickle.load(open(self.read_path, 'rb'))
+          else:
+               policy_1 = TabularPolicy(has_v_dict = True)
           policy_2 = RushPolicy()
           
           theta = 0.01
@@ -51,10 +54,10 @@ class Train:
                if delta < theta:
                     break
                
-               if time.time() - t > 60:
+               if time.time() - t > 10:
                     t = time.time()
                     print("Trained %i games so far." % i_game)
                     pickle.dump(policy_1, open(self.write_path, "wb" ) )
                
 if __name__ == '__main__':
-     Train(n_game = 1000, write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe\policy_evaluation.pkl')               
+     Train(n_game = 1000, read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe\policy_evaluation.pkl')               

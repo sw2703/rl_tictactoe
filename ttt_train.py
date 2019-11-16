@@ -39,7 +39,6 @@ class Train:
                     if s.is_terminal():
                          policy_1.v_dict[num] = 0
                          continue
-                    
                     opponent_state = policy_1.select_move(s).next_state()
                     r = opponent_state.get_reward()
                     if opponent_state.is_terminal():

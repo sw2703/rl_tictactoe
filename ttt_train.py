@@ -46,6 +46,7 @@ class Train:
                     else:
                          s_prime = policy_2.select_move(opponent_state).next_state()
                          v_s_prime = policy_1.v_dict[s_prime.get_num()]
+                         r += s_prime.get_reward()
                               
                     policy_1.v_dict[num] = r + v_s_prime
                     delta = max(delta, np.abs(v - policy_1.v_dict[num]))

@@ -43,7 +43,7 @@ class TabularPolicy(Policy):
      """
      def __init__(self, has_v_dict = False, read_path = None):
           if read_path:
-               self.v_dict, _ = pickle.load(open(self.read_path, 'rb'))
+               self, _ = pickle.load(open(read_path, 'rb'))
           else:
                self.has_v_dict = has_v_dict
                if self.has_v_dict:

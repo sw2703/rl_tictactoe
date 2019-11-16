@@ -63,4 +63,5 @@ class Train:
                     pickle.dump((policy_1, i_epoch), open(self.write_path, "wb" ) )
                
 if __name__ == '__main__':
-     Train(n_game = 1000, read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               
+#     Train(n_game = 1000, read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               
+     Train(n_game = 1000, write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               

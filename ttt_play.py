@@ -186,9 +186,7 @@ class GUIGame(Game):
          elif game_result == 0:
               messagebox.showinfo("Game Finished", "Tied")
               self.exit_flag = 1
-              self.app.destroy()
-              print('done')
-        
+              self.app.destroy()     
 
     
     def mainloop(self):

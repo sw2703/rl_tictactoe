@@ -36,3 +36,9 @@ state = State(board = [[1, 1, 0],
                        [2, 2, 0], 
                        [0, 0, 0]])
 print('Value = %f' % policy.v_dict[state.get_num()])
+
+print('About to lose no matter what move is taken. Expect value -1.')
+state = State(board = [[2, 2, 0], 
+                       [2, 2, 0], 
+                       [0, 0, 0]])
+print('Value = %f' % policy.v_dict[state.get_num()])

@@ -5,13 +5,12 @@ import pickle
 import time
 
 class Train:
-     def __init__(self, n_game, write_path, read_path = None):
+     def __init__(self, write_path, read_path = None):
           """
           Input:
                n_game: number of games to train for
                read_path, write_path: paths for reading or saving the model
           """
-          self.n_game = n_game
           self.read_path = read_path
           self.write_path = write_path
           self.SelfPlay()
@@ -63,5 +62,5 @@ class Train:
                     pickle.dump((policy_1, i_epoch), open(self.write_path, "wb" ) )
                
 if __name__ == '__main__':
-#     Train(n_game = 1000, read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               
-     Train(n_game = 1000, write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               
+#     Train(read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               
+     Train(write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               

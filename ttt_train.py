@@ -17,7 +17,7 @@ class Train:
                
      def SelfPlay(self):
           """Policy Evaluation following Sutton Barto 4.1
-             Against rush opponent
+             Random policy against rush opponent
              with regular states, no afterstates
           """
           if self.read_path:
@@ -47,6 +47,10 @@ class Train:
                          s_prime = policy_2.select_move(opponent_state).next_state()
                          v_s_prime = policy_1.v_dict[s_prime.get_num()]
                          r += s_prime.get_reward()
+                         if num == State(board = [[1, 1, 0], 
+                                                  [2, 2, 0], 
+                                                  [0, 0, 0]]).get_num():
+                              print(s_prime.board)
                               
                     policy_1.v_dict[num] = r + v_s_prime
                     delta = max(delta, np.abs(v - policy_1.v_dict[num]))

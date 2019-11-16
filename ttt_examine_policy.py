@@ -31,7 +31,7 @@ state = State(board = [[1, 1, 0],
                        [2, 2, 1]])
 print('Value = %f' % policy.v_dict[state.get_num()])
 
-print('One choice among many is a winning move. Expect value 1.')
+print('One choice among many is a winning move. Expect value between 0 and 1.')
 state = State(board = [[1, 1, 0], 
                        [2, 2, 0], 
                        [0, 0, 0]])

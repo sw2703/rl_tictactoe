@@ -81,6 +81,11 @@ class State:
               return -1
          return 0
     
+    def print_board():
+        print(self.board[0])
+        print(self.board[1])
+        print(self.board[2])
+    
 class Action:
      
      def __init__(self, state: State, move: (int, int)):

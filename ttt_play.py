@@ -28,7 +28,7 @@ class State:
              
              
     def is_terminal(self):
-         return ('0' not in np.base_repr(self.get_num(), 3))
+         return self.judge() != -1
         
     def change_turn(self):
         if self.turn == 1:

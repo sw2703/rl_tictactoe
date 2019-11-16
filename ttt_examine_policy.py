@@ -11,6 +11,8 @@ policy, i_epoch = pickle.load(open(r'C:\Users\daugh\Documents\GitHub\rl_tictacto
 
 print('This value function has been trained for %i epochs.' % i_epoch)
 
+print('Value iteration, random policy against rush policy.')
+
 print('End state, expect value 0 even if a player wins.')
 state = State(board = [[1, 1, 1], 
                        [2, 2, 1], 

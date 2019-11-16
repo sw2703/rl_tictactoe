@@ -6,7 +6,7 @@ import ttt_play
 
 class Policy:
     """ By default, a random policy. Other policies are children of this class.
-    """
+    """    
     def select_move(self, state):
         """
         Input:
@@ -41,35 +41,38 @@ class SlowRandomPolicy(Policy):
 class TabularPolicy(Policy):
      """ Use a dictionary to store the action chosen from each state.
      """
-     def __init__(self, has_v_dict = False):
-          self.has_v_dict = has_v_dict
-          if self.has_v_dict:
-               self.v_dict = dict()
-          self.move_dict = dict()
-          for i in range(3**9):
-               num_str = np.base_repr(i, base = 3)
-               num_str = '0' * (9 - len(num_str)) + num_str
-               board = [
-                         [int(num_str[0]), int(num_str[1]), int(num_str[2])],
-                         [int(num_str[3]), int(num_str[4]), int(num_str[5])],
-                         [int(num_str[6]), int(num_str[7]), int(num_str[8])]
-                         ]
-               
-               state = ttt_play.State(board, turn = 1)
+     def __init__(self, has_v_dict = False, read_path = None):
+          if read_path:
+               self.v_dict, _ = pickle.load(open(self.read_path, 'rb'))
+          else:
+               self.has_v_dict = has_v_dict
                if self.has_v_dict:
-                    self.v_dict[state.get_num()] = 0
-               try:
-                    self.move_dict[state.get_num()] = self.rush_move(state)
-               except(RuntimeError):
-                    pass
-               
-               state = ttt_play.State(board, turn = 2)
-               if self.has_v_dict:
-                    self.v_dict[state.get_num()] = 0
-               try:
-                    self.move_dict[state.get_num()] = self.rush_move(state)
-               except(RuntimeError):
-                    pass
+                    self.v_dict = dict()
+               self.move_dict = dict()
+               for i in range(3**9):
+                    num_str = np.base_repr(i, base = 3)
+                    num_str = '0' * (9 - len(num_str)) + num_str
+                    board = [
+                              [int(num_str[0]), int(num_str[1]), int(num_str[2])],
+                              [int(num_str[3]), int(num_str[4]), int(num_str[5])],
+                              [int(num_str[6]), int(num_str[7]), int(num_str[8])]
+                              ]
+                    
+                    state = ttt_play.State(board, turn = 1)
+                    if self.has_v_dict:
+                         self.v_dict[state.get_num()] = 0
+                    try:
+                         self.move_dict[state.get_num()] = self.rush_move(state)
+                    except(RuntimeError):
+                         pass
+                    
+                    state = ttt_play.State(board, turn = 2)
+                    if self.has_v_dict:
+                         self.v_dict[state.get_num()] = 0
+                    try:
+                         self.move_dict[state.get_num()] = self.rush_move(state)
+                    except(RuntimeError):
+                         pass
           
      def rush_move(self, state):
           for x in range(3):

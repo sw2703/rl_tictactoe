@@ -1,3 +1,4 @@
+from copy import deepcopy
 from tkinter import Tk, Button, messagebox
 from tkinter.font import Font
 import itertools
@@ -103,9 +104,10 @@ class Action:
           return self.state.board[self.move[0]][self.move[1]] == 0
           
      def next_state(self):
-          self.state.board[self.move[0]][self.move[1]] = self.state.turn
-          self.state.change_turn()
-          return self.state
+          state = deepcopy(self.state)
+          state.board[self.move[0]][self.move[1]] = self.state.turn
+          state.change_turn()
+          return state
 
 class Game():
      def __init__(self):

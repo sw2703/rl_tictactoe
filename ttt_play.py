@@ -81,10 +81,12 @@ class State:
               return -1
          return 0
     
-    def print_board():
+    def print_board(self):
+        print('###########')
         print(self.board[0])
         print(self.board[1])
         print(self.board[2])
+        print('###########')
     
 class Action:
      

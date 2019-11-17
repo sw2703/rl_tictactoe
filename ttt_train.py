@@ -53,6 +53,7 @@ class Train:
                i_epoch += 1
                
                if delta < theta:
+                    print('Value function has converged!')
                     break
                
                if time.time() - t > 10:

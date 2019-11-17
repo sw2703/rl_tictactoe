@@ -54,6 +54,8 @@ class Train:
                
                if delta < theta:
                     print('Value function has converged!')
+                    print("Trained %i epochs so far." % i_epoch)
+                    pickle.dump((policy_1, i_epoch), open(self.write_path, "wb" ) )
                     break
                
                if time.time() - t > 10:

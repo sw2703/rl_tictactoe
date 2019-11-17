@@ -1,5 +1,5 @@
 from ttt_play import State
-from ttt_policies import TabularPolicy, RushPolicy
+from ttt_policies import TabularPolicy
 import numpy as np
 import pickle
 import time
@@ -17,7 +17,7 @@ class Train:
                
      def SelfPlay(self):
           """Policy Evaluation following Sutton Barto 4.1
-             Random policy against rush opponent
+             Rush policy against rush opponent
              with regular states, no afterstates
           """
           if self.read_path:
@@ -25,7 +25,7 @@ class Train:
           else:
                policy_1 = TabularPolicy(has_v_dict = True)
                i_epoch = 0
-          policy_2 = RushPolicy()
+          policy_2 = TabularPolicy()
           
           theta = 0.01
           t = time.time()

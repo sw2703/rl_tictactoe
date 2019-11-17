@@ -35,8 +35,12 @@ def test_get_num_from_state():
     
 
 def test_is_terminal():
+  """ Board not full, but player 1 has won
+  """   
   state = State(board = [[0, 2, 1], [0, 1, 2], [1, 2, 2]])
-  assert not state.is_terminal()
+  assert state.is_terminal()
+  """ Board full
+  """
   state = State(board = [[1, 2, 1], [2, 1, 2], [1, 2, 2]])
   assert state.is_terminal()
 

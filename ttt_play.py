@@ -110,7 +110,7 @@ class Action:
 class Game():
      def __init__(self):
           self.state = State()
-          self.policy = ttt_policies.RushPolicy()
+          self.policy = ttt_policies.TabularPolicy()
 
      def computer_move(self):
          """ Move by the computer player, following policy

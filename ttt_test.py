@@ -43,39 +43,7 @@ def test_is_terminal():
   """
   state = State(board = [[1, 2, 1], [2, 1, 2], [1, 2, 2]])
   assert state.is_terminal()
-
-
-def test_random_policy():
-    """
-    Only one possible move.
-    """
-    state = State(board = [[1,2,1],[2,2,1],[0,1,2]], turn = 1)
-    policy = Policy()
-    state = policy.select_move(state).next_state()
-    expected_state = State(board = [[1,2,1],[2,2,1],[1,1,2]], turn = 2)
-    assert state.board == expected_state.board
-    assert state.turn == expected_state.turn
-    
-    """
-    Multiple possible moves.
-    """
-    state = State(board = [[1,0,0],[2,2,1],[0,1,2]], turn = 2)
-    policy = Policy()
-    state = policy.select_move(state).next_state()
-    expected_boards = [
-                [[1,2,0],[2,2,1],[0,1,2]],
-                [[1,0,2],[2,2,1],[0,1,2]],
-                [[1,0,0],[2,2,1],[2,1,2]]
-            ]
-    assert state.board in expected_boards
-    assert state.turn == 1
-    """
-    Filled board
-    """
-    state = State(board = [[1,2,1],[2,2,1],[1,1,2]], turn = 2)
-    policy = Policy()
-    with pytest.raises(RuntimeError):
-        policy.select_move(state).next_state()
+  
         
 def test_rush_policy():
     """
@@ -83,27 +51,28 @@ def test_rush_policy():
     """
     state = State(board = [[1,2,1],[2,2,1],[0,1,2]], turn = 1)
     policy = TabularPolicy()
-    state = policy.select_move(state).next_state()
-    expected_state = State(board = [[1,2,1],[2,2,1],[1,1,2]], turn = 2)
-    assert state.board == expected_state.board
-    assert state.turn == expected_state.turn
+    after_state = policy.after_state(state)
+    expected_after_state = State(board = [[1,2,1],[2,2,1],[1,1,2]], turn = 2)
+    assert after_state.board == expected_after_state.board
+    assert after_state.turn == expected_after_state.turn
     
     """
     Multiple possible moves.
     """
     state = State(board = [[1,0,0],[2,2,1],[0,1,2]], turn = 2)
     policy = TabularPolicy()
-    state = policy.select_move(state).next_state()
+    after_state = policy.after_state(state)
     expected_board = [[1,2,0],[2,2,1],[0,1,2]]
-    assert state.board == expected_board
-    assert state.turn == 1
+    assert after_state.board == expected_board
+    assert after_state.turn == 1
     """
     Filled board
     """
     state = State(board = [[1,2,1],[2,2,1],[1,1,2]], turn = 2)
     policy = TabularPolicy()
     with pytest.raises(KeyError):
-        policy.select_move(state).next_state()
+        policy.after_state(state)
+        
         
 def test_judge():
      # horizontal

@@ -5,7 +5,7 @@ Created on Sun Nov  3 07:29:06 2019
 @author: josephwang
 """
 
-from ttt_play import State, Game
+from ttt_play import State
 from ttt_policies import TabularPolicy
 import pytest
 
@@ -76,22 +76,17 @@ def test_rush_policy():
         
 def test_judge():
      # horizontal
-     game = Game()
-     game.state.board = [[0, 0, 0], [1, 1, 1], [0, 2, 2]]
-     assert game.judge()== 1
+     state = State(board = [[0, 0, 0], [1, 1, 1], [0, 2, 2]], turn = 1)
+     assert state.judge()== 1
      # vertical
-     game = Game()
-     game.state.board = [[0, 1, 2], [0, 1, 2], [1, 0, 2]]
-     assert game.judge() == 2
+     state = State(board = [[0, 1, 2], [0, 1, 2], [1, 0, 2]], turn = 1)
+     assert state.judge() == 2
      # diagonal 
-     game = Game()
-     game.state.board = [[1, 0, 2], [0, 1, 0], [0, 2, 1]]
-     assert game.judge() == 1
+     state = State(board = [[1, 0, 2], [0, 1, 0], [0, 2, 1]], turn = 1)
+     assert state.judge() == 1
      # unfinished game
-     game = Game()
-     game.state.board = [[1, 0, 0], [0, 0, 2], [0, 0, 0]]
-     assert game.judge() == -1
+     state = State(board = [[1, 0, 0], [0, 0, 2], [0, 0, 0]], turn = 1)
+     assert state.judge() == -1     
      # tied game
-     game = Game()
-     game.state.board = [[1, 2, 2], [2, 1, 1], [2, 1, 2]]
-     assert game.judge() == 0
+     state = State(board = [[1, 2, 2], [2, 1, 1], [2, 1, 2]], turn = 1)
+     assert state.judge() == 0      

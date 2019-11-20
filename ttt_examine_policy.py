@@ -5,10 +5,11 @@ Created on Fri Nov 15 19:58:57 2019
 @author: daugh
 """
 from ttt_play import State
+import os
 import pickle
 import pytest
 
-policy, i_epoch = pickle.load(open(r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', 'rb'))
+policy, i_epoch = pickle.load(open(os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl', 'rb'))
 
 print('This value function has been trained for %i epochs.' % i_epoch)
 theta = 0.01

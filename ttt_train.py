@@ -1,6 +1,7 @@
 from ttt_play import State
 from ttt_policies import TabularPolicy
 import numpy as np
+import os
 import pickle
 import time
 
@@ -23,7 +24,7 @@ class Train:
           if self.read_path:
                policy_1, i_epoch = pickle.load(open(self.read_path, 'rb'))
           else:
-               policy_1 = TabularPolicy(has_v_dict = True)
+               policy_1 = TabularPolicy()
                i_epoch = 0
           policy_2 = TabularPolicy()
           
@@ -39,12 +40,12 @@ class Train:
                     if s.is_terminal():
                          policy_1.v_dict[num] = 0
                          continue
-                    opponent_state = policy_1.select_move(s).next_state()
+                    opponent_state = State(from_base10 = policy_1.move_dict[num])
                     r = opponent_state.get_reward()
                     if opponent_state.is_terminal():
                          v_s_prime = 0
                     else:
-                         s_prime = policy_2.select_move(opponent_state).next_state()
+                         s_prime = State(from_base10 = policy_2.move_dict[opponent_state.get_num()])
                          v_s_prime = policy_1.v_dict[s_prime.get_num()]
                          r += s_prime.get_reward()
                     policy_1.v_dict[num] = r + v_s_prime          
@@ -65,4 +66,4 @@ class Train:
                
 if __name__ == '__main__':
 #     Train(read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               
-     Train(write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               
+     Train(write_path = os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl')               

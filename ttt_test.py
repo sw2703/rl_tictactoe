@@ -51,7 +51,7 @@ def test_rush_policy():
     """
     state = State(board = [[1,2,1],[2,2,1],[0,1,2]], turn = 1)
     policy = TabularPolicy()
-    after_state = policy.after_state(state)
+    after_state = State(from_base10 = policy.move_dict[state.get_num()])
     expected_after_state = State(board = [[1,2,1],[2,2,1],[1,1,2]], turn = 2)
     assert after_state.board == expected_after_state.board
     assert after_state.turn == expected_after_state.turn
@@ -61,7 +61,7 @@ def test_rush_policy():
     """
     state = State(board = [[1,0,0],[2,2,1],[0,1,2]], turn = 2)
     policy = TabularPolicy()
-    after_state = policy.after_state(state)
+    after_state = State(from_base10 = policy.move_dict[state.get_num()])
     expected_board = [[1,2,0],[2,2,1],[0,1,2]]
     assert after_state.board == expected_board
     assert after_state.turn == 1
@@ -71,7 +71,7 @@ def test_rush_policy():
     state = State(board = [[1,2,1],[2,2,1],[1,1,2]], turn = 2)
     policy = TabularPolicy()
     with pytest.raises(KeyError):
-        policy.after_state(state)
+         after_state = State(from_base10 = policy.move_dict[state.get_num()])
         
         
 def test_judge():

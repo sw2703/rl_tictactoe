@@ -19,7 +19,7 @@ class Train:
      def SelfPlay(self):
           """Policy Evaluation following Sutton Barto 4.1
              Rush policy against rush opponent
-             with regular states, no afterstates
+             with afterstates
           """
           if self.read_path:
                policy_1, i_epoch = pickle.load(open(self.read_path, 'rb'))
@@ -34,21 +34,19 @@ class Train:
                delta = 0
                for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
                     v = policy_1.v_dict[num]
-                    s = State(from_base10 = num)
+                    s = State(from_base10 = num)  # here s is afterstate
                     
-                    # terminal state, v function always zero
+                    # terminal state, v function equals game result (no reward for transition)
                     if s.is_terminal():
-                         policy_1.v_dict[num] = 0
+                         policy_1.v_dict[num] = s.get_reward()
                          continue
-                    opponent_state = State(from_base10 = policy_1.move_dict[num])
-                    r = opponent_state.get_reward()
-                    if opponent_state.is_terminal():
-                         v_s_prime = 0
-                    else:
-                         s_prime = State(from_base10 = policy_2.move_dict[opponent_state.get_num()])
-                         v_s_prime = policy_1.v_dict[s_prime.get_num()]
-                         r += s_prime.get_reward()
-                    policy_1.v_dict[num] = r + v_s_prime          
+                     
+                    # non-terminal afterstates
+                    opponent_afterstate = State(from_base10 = policy_2.move_dict[num])
+                    if opponent_afterstate.is_terminal():
+                        policy_1.v_dict[num] = opponent_afterstate.get_reward()
+                        continue
+
                     delta = max(delta, np.abs(v - policy_1.v_dict[num]))
                
                i_epoch += 1

@@ -56,7 +56,8 @@ state = State(board = [[1, 1, 2],
                        [0, 2, 1]])
 assert policy.v_dict[state.get_num()] == pytest.approx(0, abs = theta), 'Will be tied next step, expect value 0. Got %f' % policy.v_dict[state.get_num()]
 
-
+state = State()
+assert policy.v_dict[state.get_num()] == pytest.approx(1, abs = theta), 'Player 1 will win if both play rush moves. Got %f' % policy.v_dict[state.get_num()]
 
 """ Keep this print statement at the end
 """

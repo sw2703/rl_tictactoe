@@ -14,64 +14,79 @@ class Train:
           """
           self.read_path = read_path
           self.write_path = write_path
-          self.SelfPlay()
-               
+          if read_path:
+               self.policy_1, self.i_epoch = pickle.load(open(self.read_path, 'rb'))
+          else:
+               self.policy_1 = TabularPolicy()
+               self.i_epoch = 0
+          self.policy_2 = TabularPolicy()  
+          self.PolicyIteration()
+          
      def PolicyEvaluation(self):
           """Policy Evaluation following Sutton Barto 4.3
              Against rush opponent, with afterstates
           """
-          if self.read_path:
-               policy_1, i_epoch = pickle.load(open(self.read_path, 'rb'))
-          else:
-               policy_1 = TabularPolicy()
-               i_epoch = 0
-          policy_2 = TabularPolicy()
-          
           theta = 0.01
           t = time.time()
           while True:
                delta = 0
                for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
-                    v = policy_1.v_dict[num]
+                    v = self.policy_1.v_dict[num]
                     s = State(from_base10 = num)  # here s is afterstate
                     
                     # terminal state, v function equals game result (no reward for transition)
                     if s.is_terminal():
-                         policy_1.v_dict[num] = s.get_reward()
+                         self.policy_1.v_dict[num] = s.get_reward()
                     else:
                          # non-terminal afterstates
-                         opponent_afterstate = State(from_base10 = policy_2.move_dict[num])
+                         opponent_afterstate = State(from_base10 = self.policy_2.move_dict[num])
                          if opponent_afterstate.is_terminal():
-                             policy_1.v_dict[num] = opponent_afterstate.get_reward()
+                             self.policy_1.v_dict[num] = opponent_afterstate.get_reward()
                          else:
-                             policy_1.v_dict[num] = policy_1.v_dict[opponent_afterstate.get_num()]
+                             self.policy_1.v_dict[num] = self.policy_1.v_dict[opponent_afterstate.get_num()]
 
-                    delta = max(delta, np.abs(v - policy_1.v_dict[num]))
+                    delta = max(delta, np.abs(v - self.policy_1.v_dict[num]))
                
-               i_epoch += 1
+               self.i_epoch += 1
                
                if delta < theta:
                     print('Value function has converged!')
-                    print("Trained %i epochs so far." % i_epoch)
-                    pickle.dump((policy_1, i_epoch), open(self.write_path, "wb" ) )
+                    print("Trained %i epochs so far." % self.i_epoch)
+                    pickle.dump((self.policy_1, self.i_epoch), open(self.write_path, "wb" ) )
                     break
                
                if time.time() - t > 10:
                     t = time.time()
-                    print("Trained %i epochs so far." % i_epoch)
-                    pickle.dump((policy_1, i_epoch), open(self.write_path, "wb" ) )
+                    print("Trained %i epochs so far." % self.i_epoch)
+                    pickle.dump((self.policy_1, self.i_epoch), open(self.write_path, "wb" ) )
      
      def PolicyImprovement(self):
           """ Policy Improvement following Sutton Barto 4.3
               Against rush opponent, with afterstates
           """
-          policy_stable = True
+          self.policy_stable = True
           for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
                s = State(from_base10 = num)
                if not s.is_terminal():
-                    old_action_num = policy_1.move_dict[num]
+                    old_action_num = self.policy_1.move_dict[num]
                     # get the best afterstates
+                    afterstate_nums = s.legal_afterstates()
+                    rewards = [State(from_base10 = x).get_reward() for x in afterstate_nums]
+                    best = np.argmax(rewards)
+                    self.policy_1.move_dict[num] = afterstate_nums[best]
+                    if old_action_num != self.policy_1.move_dict[num]:
+                        self.policy_stable = False
                     
+     def PolicyIteration(self):
+        """ Policy Iteration following Sutton Barto 4.3
+              Against rush opponent, with afterstates
+        """
+        self.policy_stable = False
+        while not self.policy_stable:
+            self.PolicyEvaluation()
+            self.PolicyImprovement()
+        self.PolicyEvaluation()
+        print('Policy iteration finished!')            
                
 if __name__ == '__main__':
 #     Train(read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               

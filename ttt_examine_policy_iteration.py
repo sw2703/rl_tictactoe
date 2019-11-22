@@ -13,11 +13,9 @@ policy, i_epoch = pickle.load(open(os.path.dirname(os.getcwd()) + '/policy_evalu
 
 print('This value function has been trained for %i epochs.' % i_epoch)
 theta = 0.01
-print('Value iteration for afterstate, rush policy against rush opponent. Accuracy %f' % theta)
+print('Policy iteration against rush opponent. Accuracy %f' % theta)
 
 
-""" Afterstate for player 1
-"""
 state = State(board = [[1, 1, 1], 
                        [2, 2, 1], 
                        [2, 2, 1]], turn = 2)
@@ -38,8 +36,7 @@ state = State(board = [[1, 1, 0],
                        [0, 2, 1]], turn = 2)
 assert policy.v_dict[state.get_num()] == pytest.approx(0, abs = theta), 'Two steps before a certain tie. Expect value 0. Got %f' % policy.v_dict[state.get_num()]
 
-""" Afterstate for player 2
-"""
+
 state = State(board = [[1, 1, 0], 
                        [2, 1, 1], 
                        [2, 2, 2]])
@@ -58,6 +55,22 @@ assert policy.v_dict[state.get_num()] == pytest.approx(0, abs = theta), 'Will be
 
 state = State()
 assert policy.v_dict[state.get_num()] == pytest.approx(1, abs = theta), 'Player 1 will win if both play rush moves. Got %f' % policy.v_dict[state.get_num()]
+
+""" The following are specific for policy iteration against rush opponent
+"""
+
+state = State(board = [[1, 2, 0], 
+                       [2, 2, 0], 
+                       [1, 0, 1]])
+afterstate_num = policy.move_dict[state.get_num()]
+afterstate = State(from_base10 = afterstate_num)
+afterstate.print_board()
+assert policy.v_dict[state.get_num()] == pytest.approx(1, abs = theta), 'A winning move available, expect value 1. Got %f' % policy.v_dict[state.get_num()]
+
+state = State(board = [[1, 0, 0], 
+                       [2, 2, 0], 
+                       [1, 0, 0]])
+assert policy.v_dict[state.get_num()] == pytest.approx(1, abs = theta), 'Win by ignoring the check, expect value 1. Got %f' % policy.v_dict[state.get_num()]
 
 """ Keep this print statement at the end
 """

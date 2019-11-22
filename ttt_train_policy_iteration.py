@@ -70,6 +70,8 @@ class Train:
                s = State(from_base10 = num)
                if not s.is_terminal():
                     old_action_num = policy_1.move_dict[num]
+                    # get the best afterstates
+                    
                
 if __name__ == '__main__':
 #     Train(read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               

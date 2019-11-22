@@ -36,6 +36,7 @@ class State:
             self.turn = 2
         else:
             self.turn = 1
+        return self
            
     def get_num(self):
         num_str= str(self.turn)
@@ -88,6 +89,21 @@ class State:
         print(self.board[1])
         print(self.board[2])
         print('###########')
+              
+    def legal_afterstates(self):
+        """ Return a list of numbers encoding the legal afterstates
+        """
+        out = []
+        for x in range(3):
+            for y in range(3):
+                if self.board[x][y] == 0:
+                    new_board = deepcopy(self.board)
+                    new_board[x][y] = self.turn
+                    new_turn = 1 if self.turn == 2 else 2
+                    new_state = State(board = new_board, turn = new_turn)
+                    out.append(new_state.get_num())
+        return out
+                    
     
 class Action:
      

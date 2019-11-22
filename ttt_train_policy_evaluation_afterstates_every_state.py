@@ -39,13 +39,13 @@ class Train:
                     # terminal state, v function equals game result (no reward for transition)
                     if s.is_terminal():
                          policy_1.v_dict[num] = s.get_reward()
-                         continue
-                     
-                    # non-terminal afterstates
-                    opponent_afterstate = State(from_base10 = policy_2.move_dict[num])
-                    if opponent_afterstate.is_terminal():
-                        policy_1.v_dict[num] = opponent_afterstate.get_reward()
-                        continue
+                    else:
+                         # non-terminal afterstates
+                         opponent_afterstate = State(from_base10 = policy_2.move_dict[num])
+                         if opponent_afterstate.is_terminal():
+                             policy_1.v_dict[num] = opponent_afterstate.get_reward()
+                         else:
+                             policy_1.v_dict[num] = policy_1.v_dict[opponent_afterstate.get_num()]
 
                     delta = max(delta, np.abs(v - policy_1.v_dict[num]))
                

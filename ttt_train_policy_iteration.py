@@ -16,10 +16,9 @@ class Train:
           self.write_path = write_path
           self.SelfPlay()
                
-     def SelfPlay(self):
-          """Policy Evaluation following Sutton Barto 4.1
-             Rush policy against rush opponent
-             with afterstates
+     def PolicyEvaluation(self):
+          """Policy Evaluation following Sutton Barto 4.3
+             Against rush opponent, with afterstates
           """
           if self.read_path:
                policy_1, i_epoch = pickle.load(open(self.read_path, 'rb'))
@@ -61,6 +60,16 @@ class Train:
                     t = time.time()
                     print("Trained %i epochs so far." % i_epoch)
                     pickle.dump((policy_1, i_epoch), open(self.write_path, "wb" ) )
+     
+     def PolicyImprovement(self):
+          """ Policy Improvement following Sutton Barto 4.3
+              Against rush opponent, with afterstates
+          """
+          policy_stable = True
+          for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
+               s = State(from_base10 = num)
+               if not s.is_terminal():
+                    old_action_num = policy_1.move_dict[num]
                
 if __name__ == '__main__':
 #     Train(read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               

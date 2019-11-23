@@ -16,9 +16,11 @@ class Train:
           self.write_path = write_path
           if read_path:
                self.policy_1, self.i_epoch = pickle.load(open(self.read_path, 'rb'))
+               print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
           else:
                self.policy_1 = TabularPolicy()
                self.i_epoch = 0
+               print('Training new policy.')
           self.policy_2 = TabularPolicy()  
           self.PolicyIteration()
           
@@ -32,18 +34,19 @@ class Train:
                delta = 0
                for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
                     v = self.policy_1.v_dict[num]
-                    s = State(from_base10 = num)  # here s is afterstate
+                    state = State(from_base10 = num)  # here s is afterstate
                     
                     # terminal state, v function equals game result (no reward for transition)
-                    if s.is_terminal():
-                         self.policy_1.v_dict[num] = s.get_reward()
+                    if state.is_terminal():
+                         self.policy_1.v_dict[num] = state.get_reward()
                     else:
                          # non-terminal afterstates
                          opponent_afterstate = State(from_base10 = self.policy_2.move_dict[num])
                          if opponent_afterstate.is_terminal():
                              self.policy_1.v_dict[num] = opponent_afterstate.get_reward()
                          else:
-                             self.policy_1.v_dict[num] = self.policy_1.v_dict[opponent_afterstate.get_num()]
+                             s_prime_num = self.policy_1.move_dict[opponent_afterstate.get_num()]
+                             self.policy_1.v_dict[num] = self.policy_1.v_dict[s_prime_num]
 
                     delta = max(delta, np.abs(v - self.policy_1.v_dict[num]))
                
@@ -66,13 +69,13 @@ class Train:
           """
           self.policy_stable = True
           for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
-               s = State(from_base10 = num)
-               if not s.is_terminal():
+               state = State(from_base10 = num)
+               if not state.is_terminal():
                     old_action_num = self.policy_1.move_dict[num]
                     # get the best afterstates
-                    afterstate_nums = s.legal_afterstates()
-                    rewards = [State(from_base10 = x).get_reward() for x in afterstate_nums]
-                    best = np.argmax(rewards)
+                    afterstate_nums = state.legal_afterstates()
+                    afterstate_values = [self.policy_1.v_dict[x] for x in afterstate_nums]
+                    best = np.argmax(afterstate_values) if state.turn == 1 else np.argmin(afterstate_values)
                     self.policy_1.move_dict[num] = afterstate_nums[best]
                     if old_action_num != self.policy_1.move_dict[num]:
                         self.policy_stable = False

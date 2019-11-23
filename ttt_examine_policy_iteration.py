@@ -34,14 +34,12 @@ assert policy.v_dict[state.get_num()] == pytest.approx(-1, abs = theta), 'One st
 state = State(board = [[1, 1, 0], 
                        [2, 2, 1], 
                        [0, 2, 1]], turn = 2)
-assert policy.v_dict[state.get_num()] == pytest.approx(0, abs = theta), 'Two steps before a certain tie. Expect value 0. Got %f' % policy.v_dict[state.get_num()]
-
+assert policy.v_dict[state.get_num()] == pytest.approx(0, abs = theta), 'Two steps before a tie. Expect value 0. Got %f' % policy.v_dict[state.get_num()]
 
 state = State(board = [[1, 1, 0], 
                        [2, 1, 1], 
                        [2, 2, 2]])
 assert policy.v_dict[state.get_num()] == pytest.approx(-1, abs = theta), 'Player 2 wins, expect value -1. Got %f' % policy.v_dict[state.get_num()]
-
 
 state = State(board = [[1, 1, 0], 
                        [2, 2, 1], 
@@ -53,24 +51,45 @@ state = State(board = [[1, 1, 2],
                        [0, 2, 1]])
 assert policy.v_dict[state.get_num()] == pytest.approx(0, abs = theta), 'Will be tied next step, expect value 0. Got %f' % policy.v_dict[state.get_num()]
 
-state = State()
-assert policy.v_dict[state.get_num()] == pytest.approx(1, abs = theta), 'Player 1 will win if both play rush moves. Got %f' % policy.v_dict[state.get_num()]
-
-""" The following are specific for policy iteration against rush opponent
+""" The following are specific for policy iteration as player 1 against rush opponent
 """
+
+state = State()
+afterstate_num = policy.move_dict[state.get_num()]
+afterstate = State(from_base10 = afterstate_num)
+assert policy.v_dict[afterstate_num] == pytest.approx(1, abs = theta), 'Player 1 will win if Player 2 uses rush moves. Got %f' % policy.v_dict[state.get_num()]
 
 state = State(board = [[1, 2, 0], 
                        [2, 2, 0], 
                        [1, 0, 1]])
 afterstate_num = policy.move_dict[state.get_num()]
-afterstate = State(from_base10 = afterstate_num)
-afterstate.print_board()
-assert policy.v_dict[state.get_num()] == pytest.approx(1, abs = theta), 'A winning move available, expect value 1. Got %f' % policy.v_dict[state.get_num()]
+assert policy.v_dict[afterstate_num] == pytest.approx(1, abs = theta), 'A winning move available, expect value 1. Got %f' % policy.v_dict[state.get_num()]
 
-state = State(board = [[1, 0, 0], 
+state = State(board = [[1, 0, 0],   
                        [2, 2, 0], 
                        [1, 0, 0]])
-assert policy.v_dict[state.get_num()] == pytest.approx(1, abs = theta), 'Win by ignoring the check, expect value 1. Got %f' % policy.v_dict[state.get_num()]
+afterstate_num = policy.move_dict[state.get_num()]
+afterstate = State(from_base10 = afterstate_num)
+assert policy.v_dict[afterstate_num] == pytest.approx(1, abs = theta), 'Win by ignoring the check, expect value 1. Got %f' % policy.v_dict[state.get_num()]
+
+""" The following are specific for policy iteration as player 2 against rush opponent
+"""
+state = State()
+assert policy.v_dict[state.get_num()] == pytest.approx(-1, abs = theta), 'Player 2 will win if player 1 uses rush moves. Got %f' % policy.v_dict[state.get_num()]
+
+state = State(board = [[1, 2, 0], 
+                       [2, 2, 0], 
+                       [1, 0, 1]], turn = 2)
+afterstate_num = policy.move_dict[state.get_num()]
+assert policy.v_dict[afterstate_num] == pytest.approx(-1, abs = theta), 'A winning move available for Player 2, expect value -1. Got %f' % policy.v_dict[state.get_num()]
+
+state = State(board = [[1, 0, 0],   
+                       [0, 2, 0], 
+                       [1, 0, 2]], turn = 2)
+afterstate_num = policy.move_dict[state.get_num()]
+afterstate = State(from_base10 = afterstate_num)
+assert policy.v_dict[afterstate_num] == pytest.approx(-1, abs = theta), 'Player 2 can win by ignoring the check, expect value -1. Got %f' % policy.v_dict[state.get_num()]
+
 
 """ Keep this print statement at the end
 """

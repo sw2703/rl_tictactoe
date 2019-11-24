@@ -13,7 +13,7 @@ policy, i_epoch = pickle.load(open(os.path.dirname(os.getcwd()) + '/policy_evalu
 
 print('This value function has been trained for %i epochs.' % i_epoch)
 theta = 0.01
-print('Policy iteration against rush opponent. Accuracy %f' % theta)
+print('Value iteration against rush opponent. Accuracy %f' % theta)
 
 
 state = State(board = [[1, 1, 1], 

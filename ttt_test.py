@@ -89,4 +89,20 @@ def test_judge():
      assert state.judge() == -1     
      # tied game
      state = State(board = [[1, 2, 2], [2, 1, 1], [2, 1, 2]], turn = 1)
-     assert state.judge() == 0      
+     assert state.judge() == 0     
+     
+def test_legal_afterstates():
+     # full board, no legal afterstate
+     state = State(board = [[2, 2, 2], [1, 1, 1], [1, 2, 2]], turn = 1)
+     assert not state.legal_afterstates()
+     # one legal afterstate
+     state = State(board = [[2, 2, 2], [1, 1, 1], [1, 0, 2]], turn = 1)
+     assert state.legal_afterstates() == [State([[2, 2, 2], [1, 1, 1], [1, 1, 2]], turn = 2).get_num()]
+     # 3 legal afterstates
+     state = State(board = [[2, 2, 2], [1, 1, 1], [0, 0, 0]], turn = 2)
+     temp = state.legal_afterstates()
+     assert len(temp) == 3
+     num1 = State(board = [[2, 2, 2], [1, 1, 1], [2, 0, 0]]).get_num()
+     num2 = State(board = [[2, 2, 2], [1, 1, 1], [0, 2, 0]]).get_num()
+     num3 = State(board = [[2, 2, 2], [1, 1, 1], [0, 0, 2]]).get_num()
+     assert set(temp) == set([num1, num2, num3])

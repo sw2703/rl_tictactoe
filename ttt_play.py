@@ -3,6 +3,8 @@ from tkinter import Tk, Button, messagebox
 from tkinter.font import Font
 import itertools
 import numpy as np
+import os
+import pickle
 import ttt_policies
 
 class State:
@@ -126,15 +128,19 @@ class Action:
           return state
 
 class Game():
-     def __init__(self):
+     def __init__(self, policy_path = None):
           self.state = State()
-          self.policy = ttt_policies.TabularPolicy()
+          if policy_path:
+              policy, i_epoch = pickle.load(open(policy_path, 'rb'))
+              self.policy = policy
+          else:
+              self.policy = ttt_policies.TabularPolicy()
 
      def computer_move(self):
          """ Move by the computer player, following policy
          """
-         action = self.policy.select_move(self.state)
-         self.state = action.next_state()
+         new_num = self.policy.move_dict[self.state.get_num()]
+         self.state = State(from_base10 = new_num)
 
      def judge(self):
         """
@@ -146,8 +152,8 @@ class Game():
         return self.state.judge()         
     
 class GUIGame(Game):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, policy_path):
+        super().__init__(policy_path)
         self.app = Tk()
         self.app.title('TicTacToe')
         self.app.resizable(width=False, height=False)
@@ -218,4 +224,5 @@ class GUIGame(Game):
          self.app.mainloop()
 
 if __name__ == '__main__':
-     GUIGame().mainloop()
+     policy_path = os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl'
+     GUIGame(policy_path).mainloop()

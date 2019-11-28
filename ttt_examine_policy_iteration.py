@@ -72,6 +72,7 @@ afterstate_num = policy.move_dict[state.get_num()]
 afterstate = State(from_base10 = afterstate_num)
 assert policy.v_dict[afterstate_num] == pytest.approx(1, abs = theta), 'Win by ignoring the check, expect value 1. Got %f' % policy.v_dict[state.get_num()]
 
+
 """ The following are specific for policy iteration as player 2 against rush opponent
 """
 state = State()
@@ -90,6 +91,14 @@ afterstate_num = policy.move_dict[state.get_num()]
 afterstate = State(from_base10 = afterstate_num)
 assert policy.v_dict[afterstate_num] == pytest.approx(-1, abs = theta), 'Player 2 can win by ignoring the check, expect value -1. Got %f' % policy.v_dict[state.get_num()]
 
+state = State(board = [[2, 0, 0],   
+                       [0, 1, 0], 
+                       [0, 1, 0]], turn = 2)
+afterstate_num = policy.move_dict[state.get_num()]
+expected_afterstate = State(board = [[2, 2, 0],   
+                                     [0, 1, 0], 
+                                     [0, 1, 0]], turn = 1)
+assert afterstate_num == expected_afterstate.get_num(), "Player 2 should respond to the check."
 
 """ Keep this print statement at the end
 """

@@ -5,6 +5,7 @@ import itertools
 import numpy as np
 import os
 import pickle
+import random
 import ttt_policies
 
 class State:
@@ -136,11 +137,20 @@ class Game():
           else:
               self.policy = ttt_policies.TabularPolicy()
 
-     def computer_move(self):
+     def computer_move(self, initial_random = False):
          """ Move by the computer player, following policy
          """
-         new_num = self.policy.move_dict[self.state.get_num()]
-         self.state = State(from_base10 = new_num)
+         if initial_random:
+             # Half the time, make a move at the center.
+             if np.random.rand() > .5:
+                 self.state = State(board = [[0, 0, 0], [0, 1, 0], [0, 0, 0]], turn = 2)
+             # Half the time, choose a random move among the nine.
+             else:
+                 num = random.choice(State().legal_afterstates())
+                 self.state = State(from_base10 = num)
+         else:
+             new_num = self.policy.move_dict[self.state.get_num()]
+             self.state = State(from_base10 = new_num)
 
      def judge(self):
         """
@@ -166,6 +176,9 @@ class GUIGame(Game):
                   button = Button(self.app, command=handler, font=self.font, width=2, height=1)
                   button.grid(row=y, column=x)
                   self.buttons[x,y] = button
+        if np.random.rand() < 5:
+            self.computer_move(initial_random = True)
+            
         
     def human_move(self, x, y):
          """ Move by the human player
@@ -179,11 +192,11 @@ class GUIGame(Game):
          self.update()
          return self
          
-    def computer_move(self):
+    def computer_move(self, initial_random = False):
          """ Move by the computer player, following policy
          """
          if not self.exit_flag:
-              super().computer_move()
+              super().computer_move(initial_random)
               self.update()
 
     def update(self):
@@ -205,15 +218,13 @@ class GUIGame(Game):
           
          game_result = self.judge()  
          if game_result == 1:
-               messagebox.showinfo("Game Finished", "Player wins")
+               messagebox.showinfo("Game Finished", "Player X wins")
                self.exit_flag = 1
                self.app.destroy()
-               print('done')
          elif game_result == 2:
-               messagebox.showinfo("Game Finished", "Computer wins")
+               messagebox.showinfo("Game Finished", "Player O wins")
                self.exit_flag = 1
                self.app.destroy()
-               print('done')
          elif game_result == 0:
               messagebox.showinfo("Game Finished", "Tied")
               self.exit_flag = 1

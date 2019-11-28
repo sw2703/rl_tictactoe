@@ -45,35 +45,6 @@ def test_is_terminal():
     assert state.is_terminal()
 
 
-def test_rush_policy():
-    """
-    Only one possible move.
-    """
-    state = State(board=[[1, 2, 1], [2, 2, 1], [0, 1, 2]], turn=1)
-    policy = TabularPolicy()
-    after_state = State(from_base10=policy.move_dict[state.get_num()])
-    expected_after_state = State(
-        board=[[1, 2, 1], [2, 2, 1], [1, 1, 2]], turn=2)
-    assert after_state.board == expected_after_state.board
-    assert after_state.turn == expected_after_state.turn
-
-    """
-    Multiple possible moves.
-    """
-    state = State(board=[[1, 0, 0], [2, 2, 1], [0, 1, 2]], turn=2)
-    policy = TabularPolicy()
-    after_state = State(from_base10=policy.move_dict[state.get_num()])
-    expected_board = [[1, 2, 0], [2, 2, 1], [0, 1, 2]]
-    assert after_state.board == expected_board
-    assert after_state.turn == 1
-    """
-    Filled board
-    """
-    state = State(board=[[1, 2, 1], [2, 2, 1], [1, 1, 2]], turn=2)
-    policy = TabularPolicy()
-    with pytest.raises(KeyError):
-        after_state = State(from_base10=policy.move_dict[state.get_num()])
-
 
 def test_judge():
     # horizontal
@@ -109,3 +80,42 @@ def test_legal_afterstates():
     num2 = State(board=[[2, 2, 2], [1, 1, 1], [0, 2, 0]]).get_num()
     num3 = State(board=[[2, 2, 2], [1, 1, 1], [0, 0, 2]]).get_num()
     assert set(temp) == set([num1, num2, num3])
+    
+
+def test_rush_policy():
+    """
+    Only one possible move.
+    """
+    state = State(board=[[1, 2, 1], [2, 2, 1], [0, 1, 2]], turn=1)
+    policy = TabularPolicy()
+    after_state = State(from_base10=policy.move_dict[state.get_num()])
+    expected_after_state = State(
+        board=[[1, 2, 1], [2, 2, 1], [1, 1, 2]], turn=2)
+    assert after_state.board == expected_after_state.board
+    assert after_state.turn == expected_after_state.turn
+
+    """
+    Multiple possible moves.
+    """
+    state = State(board=[[1, 0, 0], [2, 2, 1], [0, 1, 2]], turn=2)
+    policy = TabularPolicy()
+    after_state = State(from_base10=policy.move_dict[state.get_num()])
+    expected_board = [[1, 2, 0], [2, 2, 1], [0, 1, 2]]
+    assert after_state.board == expected_board
+    assert after_state.turn == 1
+    """
+    Filled board
+    """
+    state = State(board=[[1, 2, 1], [2, 2, 1], [1, 1, 2]], turn=2)
+    policy = TabularPolicy()
+    with pytest.raises(KeyError):
+        after_state = State(from_base10=policy.move_dict[state.get_num()])
+
+def test_be_greedy():
+    policy = TabularPolicy()
+    best = State(board = [[0, 0, 0], [1, 0, 0], [0, 0, 0]], turn = 2)
+    policy.v_dict[best.get_num()] = 1
+    assert policy.be_greedy()
+    state = State()
+    assert policy.move_dict[state.get_num()] == best.get_num()
+    assert not policy.be_greedy()  # No more change when run the second time

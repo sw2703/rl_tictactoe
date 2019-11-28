@@ -176,7 +176,7 @@ class GUIGame(Game):
                   button = Button(self.app, command=handler, font=self.font, width=2, height=1)
                   button.grid(row=y, column=x)
                   self.buttons[x,y] = button
-        if np.random.rand() < 5:
+        if np.random.rand() < .5:
             self.computer_move(initial_random = True)
             
         

@@ -5,8 +5,19 @@ import os
 import pickle
 import time
 
-class Train:
-     def __init__(self, write_path, read_path = None):
+class SelfPlayTrain():
+    def __init__(self, path):
+        self.path = path
+        self.IterativeTrain()
+    
+    def IterativeTrain(self):
+        trainer = TrainOneRound(write_path = self.path, self_play = True)
+        while trainer.policy_ever_changed:
+            trainer.PolicyIteration()
+        print("Self play finished!")
+
+class TrainOneRound:
+     def __init__(self, write_path, read_path = None, self_play = False):
           """
           Input:
                n_game: number of games to train for
@@ -21,8 +32,12 @@ class Train:
                self.policy_1 = TabularPolicy()
                self.i_epoch = 0
                print('Training new policy.')
-          self.policy_2 = TabularPolicy()  
-          self.PolicyIteration()
+               self.read_path = self.write_path  # for later iterative training
+          if self_play:
+              self.policy_2 = self.policy_1
+          else:
+              self.policy_2 = TabularPolicy()  
+          self.policy_ever_changed = True  # Set to true to state iterative training
           
      def PolicyEvaluation(self):
           """Policy Evaluation following Sutton Barto 4.3
@@ -79,18 +94,20 @@ class Train:
                     self.policy_1.move_dict[num] = afterstate_nums[best]
                     if old_action_num != self.policy_1.move_dict[num]:
                         self.policy_stable = False
+                        self.policy_ever_changed = True
                     
      def PolicyIteration(self):
         """ Policy Iteration following Sutton Barto 4.3
               Against rush opponent, with afterstates
         """
         self.policy_stable = False
+        self.policy_ever_changed = False
         while not self.policy_stable:
             self.PolicyEvaluation()
             self.PolicyImprovement()
         self.PolicyEvaluation()
-        print('Policy iteration finished!')            
+        print('Policy iteration finished!')    
                
 if __name__ == '__main__':
 #     Train(read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')               
-     Train(write_path = os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl')               
+     SelfPlayTrain(path = os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl')         

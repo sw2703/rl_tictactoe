@@ -45,8 +45,12 @@ class TabularPolicy():
                 v_dict_slice = {
                     s: self.v_dict[s] for s in afterstates}
                 old_move = self.move_dict[num]
-                self.move_dict[num] = max(
-                    v_dict_slice, key=v_dict_slice.get)
+                if s.turn == 1:
+                    self.move_dict[num] = max(
+                        v_dict_slice, key=v_dict_slice.get)
+                else:
+                    self.move_dict[num] = min(
+                        v_dict_slice, key=v_dict_slice.get)
                 if old_move != self.move_dict[num]:
                     policy_has_changed = True
         return policy_has_changed

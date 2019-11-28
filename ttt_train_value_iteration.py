@@ -6,7 +6,7 @@ import pickle
 import time
 
 
-class SelfPlayTrain():
+class SelfPlayTrain:
     def __init__(self, path):
         self.path = path
         self.IterativeTrain()
@@ -145,17 +145,7 @@ class TrainOneRound:
             if delta < theta:
                 print('Value function has converged!')
                 print("Trained %i epochs so far." % self.i_epoch)
-                for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
-                    s = State(from_base10=num)
-                    if not s.is_terminal():
-                        afterstates = s.legal_afterstates()
-                        v_dict_slice = {
-                            s: self.policy_1.v_dict[s] for s in afterstates}
-                        old_move = self.policy_1.move_dict[num]
-                        self.policy_1.move_dict[num] = max(
-                            v_dict_slice, key=v_dict_slice.get)
-                        if old_move != self.policy_1.move_dict[num]:
-                            self.policy_ever_changed = True
+                self.policy_1.be_greedy()
                 pickle.dump((self.policy_1, self.i_epoch),
                             open(self.write_path, "wb"))
                 break
@@ -163,21 +153,13 @@ class TrainOneRound:
             if time.time() - t > 10:
                 t = time.time()
                 print("Trained %i epochs so far." % self.i_epoch)
-                for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
-                    s = State(from_base10=num)
-                    if not s.is_terminal():
-                        afterstates = s.legal_afterstates()
-                        v_dict_slice = {
-                            s: self.policy_1.v_dict[s] for s in afterstates}
-                        old_move = self.policy_1.move_dict[num]
-                        self.policy_1.move_dict[num] = max(
-                            v_dict_slice, key=v_dict_slice.get)
-                        if old_move != self.policy_1.move_dict[num]:
-                            self.policy_ever_changed = True
+                self.policy_1.be_greedy()
                 pickle.dump((self.policy_1, self.i_epoch),
                             open(self.write_path, "wb"))
 
 
 if __name__ == '__main__':
     #     Train(read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')
-    SelfPlayTrain(path=os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl')
+    trainer = TrainOneRound(write_path=os.path.dirname(
+        os.getcwd()) + '/policy_evaluation.pkl')
+    trainer.ValueIteration()

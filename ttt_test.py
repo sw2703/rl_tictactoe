@@ -45,7 +45,6 @@ def test_is_terminal():
     assert state.is_terminal()
 
 
-
 def test_judge():
     # horizontal
     state = State(board=[[0, 0, 0], [1, 1, 1], [0, 2, 2]], turn=1)
@@ -80,7 +79,7 @@ def test_legal_afterstates():
     num2 = State(board=[[2, 2, 2], [1, 1, 1], [0, 2, 0]]).get_num()
     num3 = State(board=[[2, 2, 2], [1, 1, 1], [0, 0, 2]]).get_num()
     assert set(temp) == set([num1, num2, num3])
-    
+
 
 def test_rush_policy():
     """
@@ -111,9 +110,10 @@ def test_rush_policy():
     with pytest.raises(KeyError):
         after_state = State(from_base10=policy.move_dict[state.get_num()])
 
+
 def test_be_greedy():
     policy = TabularPolicy()
-    best = State(board = [[0, 0, 0], [1, 0, 0], [0, 0, 0]], turn = 2)
+    best = State(board=[[0, 0, 0], [1, 0, 0], [0, 0, 0]], turn=2)
     policy.v_dict[best.get_num()] = 1
     assert policy.be_greedy()
     state = State()

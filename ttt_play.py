@@ -120,11 +120,11 @@ class Action:
           self.move = move
           
      def is_legal(self):
-          return self.state.board[self.move[0]][self.move[1]] == 0
+          return self.state.board[self.move[1]][self.move[0]] == 0
           
      def next_state(self):
           state = deepcopy(self.state)
-          state.board[self.move[0]][self.move[1]] = self.state.turn
+          state.board[self.move[1]][self.move[0]] = self.state.turn
           state.change_turn()
           return state
 
@@ -172,7 +172,7 @@ class GUIGame(Game):
         self.buttons = {}
         for x in range(3):
              for y in range(3):
-                  handler = lambda x=x,y=y: self.human_move(x,y).computer_move()
+                  handler = lambda x=x,y=y: self.human_move(x, y).computer_move()
                   button = Button(self.app, command=handler, font=self.font, width=2, height=1)
                   button.grid(row=y, column=x)
                   self.buttons[x,y] = button
@@ -202,9 +202,9 @@ class GUIGame(Game):
     def update(self):
          for x in range(3):
               for y in range(3):
-                   if self.state.board[x][y] == 1:
+                   if self.state.board[y][x] == 1:
                         text = "X"
-                   elif self.state.board[x][y] == 2:
+                   elif self.state.board[y][x] == 2:
                         text = "O"
                    else:
                         text = ""
@@ -229,7 +229,7 @@ class GUIGame(Game):
               messagebox.showinfo("Game Finished", "Tied")
               self.exit_flag = 1
               self.app.destroy()     
-
+          
     
     def mainloop(self):
          self.app.mainloop()

@@ -31,3 +31,22 @@ class TabularPolicy():
                     state.change_turn()
                     return state.get_num()
         raise RuntimeError('Cannot make a move on a full board!')
+
+    def be_greedy(self):
+        """ Change move_dict to be greedy according to v_dict
+        Returns: 
+            True if any move has changed.
+        """
+        policy_has_changed = False
+        for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
+            s = ttt_play.State(from_base10=num)
+            if not s.is_terminal():
+                afterstates = s.legal_afterstates()
+                v_dict_slice = {
+                    s: self.v_dict[s] for s in afterstates}
+                old_move = self.move_dict[num]
+                self.move_dict[num] = max(
+                    v_dict_slice, key=v_dict_slice.get)
+                if old_move != self.move_dict[num]:
+                    policy_has_changed = True
+        return policy_has_changed

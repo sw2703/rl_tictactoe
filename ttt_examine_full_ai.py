@@ -68,13 +68,13 @@ afterstate_num = policy.move_dict[state.get_num()]
 assert policy.v_dict[afterstate_num] == pytest.approx(
     1, abs=theta), 'Player 1 can win, expect value 1. Got %f' % policy.v_dict[state.get_num()]
 
-state = State(board=[[1, 1, 0],
-                     [1, 2, 0],
-                     [0, 0, 2]], turn=2)
+state = State(board = [[2, 1, 0], [1, 1, 0], [0, 2, 0]], turn = 2)
 afterstate_num = policy.move_dict[state.get_num()]
 assert policy.v_dict[afterstate_num] == pytest.approx(
-    1, abs=theta), 'Player 1 can win, expect value 1. Got %f' % policy.v_dict[state.get_num()]
+    0, abs=theta), 'Will be a tie, expect value 0. Got %f' % policy.v_dict[state.get_num()]
 
+assert policy.v_dict[afterstate_num] == pytest.approx(
+    0, abs=theta), 'Will be tied, expect value 0. Got %f' % policy.v_dict[state.get_num()]
 
 """ Keep this print statement at the end
 """

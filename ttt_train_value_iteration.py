@@ -145,7 +145,7 @@ class TrainOneRound:
             if delta < theta:
                 print('Value function has converged!')
                 print("Trained %i epochs so far." % self.i_epoch)
-                self.policy_1.be_greedy()
+                self.policy_ever_changed = self.policy_1.be_greedy()
                 pickle.dump((self.policy_1, self.i_epoch),
                             open(self.write_path, "wb"))
                 break
@@ -153,13 +153,13 @@ class TrainOneRound:
             if time.time() - t > 10:
                 t = time.time()
                 print("Trained %i epochs so far." % self.i_epoch)
-                self.policy_1.be_greedy()
+                self.policy_ever_changed = self.policy_1.be_greedy()
                 pickle.dump((self.policy_1, self.i_epoch),
                             open(self.write_path, "wb"))
 
 
 if __name__ == '__main__':
-    #     Train(read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')
-    trainer = TrainOneRound(write_path=os.path.dirname(
+#    trainer = TrainOneRound(write_path=os.path.dirname(
+#        os.getcwd()) + '/policy_evaluation.pkl')
+    SelfPlayTrain(path = os.path.dirname(
         os.getcwd()) + '/policy_evaluation.pkl')
-    trainer.ValueIteration()

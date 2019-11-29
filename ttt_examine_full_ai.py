@@ -66,9 +66,9 @@ state = State(board=[[0, 2, 0],
                      [0, 0, 0]])
 afterstate_num = policy.move_dict[state.get_num()]
 assert policy.v_dict[afterstate_num] == pytest.approx(
-    1, abs=theta), 'Player 1 can win, expect value 1. Got %f' % policy.v_dict[state.get_num()]
+    1, abs=theta), 'Player 1 can win, expect value 1. Got %f' % policy.v_dict[afterstate_num]
 
-state = State(board = [[2, 1, 0], [1, 1, 2], [0, 2, 0]], turn = 1)
+state = State(board=[[2, 1, 0], [1, 1, 2], [0, 2, 0]], turn=1)
 afterstate_num = policy.move_dict[state.get_num()]
 policy.print_progression(state)
 assert policy.v_dict[afterstate_num] == pytest.approx(

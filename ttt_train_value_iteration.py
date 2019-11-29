@@ -135,8 +135,12 @@ class TrainOneRound:
                         )
                     else:
                         s_prime_choices = opponent_afterstate.legal_afterstates()
-                        vi_update = max([self.policy_1.v_dict[x]
-                                         for x in s_prime_choices])
+                        if state.turn == 1:
+                             vi_update = max([self.policy_1.v_dict[x]
+                                              for x in s_prime_choices])
+                        else:
+                             vi_update = min([self.policy_1.v_dict[x]
+                                              for x in s_prime_choices])
                         self.policy_1.v_dict[num] = vi_update
                 delta = max(delta, np.abs(v - self.policy_1.v_dict[num]))
 
@@ -159,7 +163,9 @@ class TrainOneRound:
 
 
 if __name__ == '__main__':
-#    trainer = TrainOneRound(write_path=os.path.dirname(
+#    trainer = TrainOneRound(read_path=os.path.dirname(
+#        os.getcwd()) + '/policy_evaluation.pkl', write_path=os.path.dirname(
 #        os.getcwd()) + '/policy_evaluation.pkl')
+#    trainer.ValueIteration()
     SelfPlayTrain(path = os.path.dirname(
         os.getcwd()) + '/policy_evaluation.pkl')

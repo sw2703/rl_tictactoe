@@ -93,6 +93,8 @@ class State:
         print(self.board[1])
         print(self.board[2])
         print('###########')
+        print('Turn = %i' % self.turn)
+        print('###########')
 
     def legal_afterstates(self):
         """ Return a list of numbers encoding the legal afterstates

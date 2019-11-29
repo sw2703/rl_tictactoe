@@ -34,7 +34,7 @@ class TabularPolicy():
 
     def be_greedy(self):
         """ Change move_dict to be greedy according to v_dict
-        Returns: 
+        Returns:
             True if any move has changed.
         """
         policy_has_changed = False
@@ -54,3 +54,14 @@ class TabularPolicy():
                 if old_move != self.move_dict[num]:
                     policy_has_changed = True
         return policy_has_changed
+
+    def print_progression(self, state):
+          """ Print the progression of a game starting from state till the end,
+              where both players follow this policy.
+          """
+          state.print_board()
+          num = state.get_num()
+          print("This state has value %f" % self.v_dict[num])
+          if not state.is_terminal():
+               afterstate = ttt_play.State(from_base10 = self.move_dict[num])
+               self.print_progression(afterstate)

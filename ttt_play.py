@@ -93,7 +93,7 @@ class State:
         print(self.board[1])
         print(self.board[2])
         print('###########')
-        print('Turn = %i' % self.turn)
+        print('Turn = %i, num = %i' % (self.turn, self.get_num()))
         print('###########')
 
     def legal_afterstates(self):

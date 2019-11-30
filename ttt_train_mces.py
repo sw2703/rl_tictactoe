@@ -4,6 +4,19 @@ import os
 import pickle
 import time
 
+class SelfPlayTrain:
+    def __init__(self, path):
+        self.path = path
+        self.IterativeTrain()
+
+    def IterativeTrain(self):
+        trainer = TrainOneRound(path=self.path)
+        trainer.MCES()
+        while not trainer.policy_stable:
+            trainer = TrainOneRound(path=self.path, read_first = True)
+            trainer.MCES()
+        print("Self play finished!")
+
 
 class TrainOneRound:
     def __init__(self, path, read_first = False):
@@ -17,6 +30,7 @@ class TrainOneRound:
              print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
         self.path = path
         self.i_epoch = 0
+        self.policy_stable = False
           
     def MCES(self):
         """ MC exploring start following Sutton Barto 5.3
@@ -25,7 +39,7 @@ class TrainOneRound:
         t = time.time()
         self.policy_1 = TabularPolicy()
         # No need to use a list of returns, since the game is deterministic
-        for s in range(int('2' + '0' * 9, 3), int('2' * 10, 3) + 1):
+        for s in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
              history = [s]
              while not State(from_base10 = s).is_terminal():
                   s = self.policy_1.move_dict[s]
@@ -38,7 +52,7 @@ class TrainOneRound:
              g = State(from_base10 = s).get_reward()
              for i, s in enumerate(history):
                   self.policy_1.v_dict[s] = g
-             self.policy_1.be_greedy(history)
+             self.policy_stable = not self.policy_1.be_greedy(history)
              self.i_epoch += 1
              if time.time() - t > 10:
                   t = time.time()
@@ -48,8 +62,8 @@ class TrainOneRound:
              
         pickle.dump((self.policy_1, self.i_epoch),
                             open(self.path, "wb"))
-        print('MC prediction finished.')
+        print('MC exploring start finished.')
              
 if __name__ == '__main__':
-    trainer = TrainOneRound(path=os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl')
-    trainer.MCES()
+    SelfPlayTrain(path=os.path.dirname(
+        os.getcwd()) + '/policy_evaluation.pkl')

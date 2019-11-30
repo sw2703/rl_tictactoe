@@ -3,27 +3,29 @@ from ttt_policies import TabularPolicy
 import numpy as np
 import os
 import pickle
-import time
 
 
 class TrainOneRound:
-    def __init__(self, read_path):
+    def __init__(self, path, read_first = False):
         """
         Input:
-             read_path
+             path: the path to save the policy
+             read_first: if true, read from the path first
         """
-        self.read_path = read_path
-        self.policy_1, self.i_epoch = pickle.load(open(self.read_path, 'rb'))
-        print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
-
+        if read_first:
+             self.policy_1, self.i_epoch = pickle.load(open(path, 'rb'))
+             print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
+        self.path = path
+        self.i_epoch = 0
+          
     def MCPrediction(self, n_epoch):
         """ MC prediction following Sutton Barto 5.1
             Against rush opponent
         Input:
              n_epoch: the number of episodes to be trained
         """
-        policy_1 = TabularPolicy()
-        policy_2 = TabularPolicy()
+        self.policy_1 = TabularPolicy()
+        self.policy_2 = TabularPolicy()
         returns = dict()
         for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
              returns[num] = [0]
@@ -32,21 +34,25 @@ class TrainOneRound:
              s = State().get_num()
              history = [s]
              while not State(from_base10 = s).is_terminal():
-                  s = policy_1.move_dict[s]
+                  s = self.policy_1.move_dict[s]
                   history.append(s)
                   if State(from_base10 = s).is_terminal():
                        break
-                  s = policy_2.move_dict[s]
+                  s = self.policy_2.move_dict[s]
                   history.append(s)
              # in our special case, g is a constant
              g = State(from_base10 = s).get_reward()
              for i, s in enumerate(history):
                   returns[s].append(g)
                   if i % 2 == 1:
-                       policy_1.v_dict[s] = np.average(returns[s])
+                       self.policy_1.v_dict[s] = np.average(returns[s])
                   else:
-                       policy_2.v_dict[s] = np.average(returns[s])
+                       self.policy_2.v_dict[s] = np.average(returns[s])
+        self.i_epoch += 1
+        pickle.dump((self.policy_1, self.i_epoch),
+                            open(self.path, "wb"))
+        print('MC prediction finished.')
              
 if __name__ == '__main__':
-    #     Train(read_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl', write_path = r'C:\Users\daugh\Documents\GitHub\rl_tictactoe_data\policy_evaluation.pkl')
-    SelfPlayTrain(path=os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl')
+    trainer = TrainOneRound(path=os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl')
+    trainer.MCPrediction(1)

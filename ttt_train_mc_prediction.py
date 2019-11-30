@@ -28,7 +28,7 @@ class TrainOneRound:
         self.policy_2 = TabularPolicy()
         returns = dict()
         for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
-             returns[num] = [0]
+             returns[num] = []
         for _ in range(n_epoch):
              # generate an episode following policy_1
              s = State().get_num()
@@ -44,10 +44,12 @@ class TrainOneRound:
              g = State(from_base10 = s).get_reward()
              for i, s in enumerate(history):
                   returns[s].append(g)
-                  if i % 2 == 1:
+                  if i % 2 == 0:
                        self.policy_1.v_dict[s] = np.average(returns[s])
                   else:
                        self.policy_2.v_dict[s] = np.average(returns[s])
+        for num in range(int('2' + '0' * 9, 3), int('2' * 10, 3) + 1):
+             self.policy_1.v_dict[num] = self.policy_2.v_dict[num]
         self.i_epoch += 1
         pickle.dump((self.policy_1, self.i_epoch),
                             open(self.path, "wb"))

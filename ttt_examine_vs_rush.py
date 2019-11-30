@@ -20,6 +20,7 @@ print('Policy iteration against rush opponent. Accuracy %f' % theta)
 state = State(board=[[1, 1, 1],
                      [2, 2, 1],
                      [2, 2, 1]], turn=2)
+state.print_board()
 assert policy.v_dict[state.get_num()] == pytest.approx(
     1, abs=theta), 'Player 1 wins, expect value 1. Got %f' % policy.v_dict[state.get_num()]
 

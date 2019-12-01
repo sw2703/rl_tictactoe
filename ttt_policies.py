@@ -1,3 +1,5 @@
+import numpy as np
+import random
 import ttt_play
 
 
@@ -58,6 +60,13 @@ class TabularPolicy():
                 if old_move != self.move_dict[num]:
                     policy_has_changed = True
         return policy_has_changed
+    
+    def epsilon_soft(self, num, epsilon):
+        if np.random.rand() < epsilon:
+            state = ttt_play.State(from_base10 = num)
+            return random.choice(state.legal_afterstates())
+        else:
+            return self.rush_move(num_base10 = num)
 
     def print_progression(self, state):
         """ Print the progression of a game starting from state till the end,

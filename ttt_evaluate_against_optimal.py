@@ -21,7 +21,7 @@ class EvaluateAgainstOptimal:
           """ Load the policy to be evaluated 
           """
           policy_path = os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl'
-          policy, i_epoch = pickle.load(open(policy_path, 'rb'))
+          self.policy, i_epoch = pickle.load(open(policy_path, 'rb'))
           print("Policy loaded. This policy has been trained for %i epoches." % i_epoch)
 
      def Run(self):
@@ -63,7 +63,8 @@ class EvaluateAgainstOptimal:
                return State()
           else:
                choices = State().legal_afterstates()
-               return random.choice(choices)
+               num = random.choice(choices)
+               return State(from_base10 = num)
           
 if __name__ == '__main__':
-      EvaluateAgainstOptimal()
+      EvaluateAgainstOptimal().Run()

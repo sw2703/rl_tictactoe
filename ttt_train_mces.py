@@ -41,6 +41,7 @@ class TrainOneRound:
         t = time.time()
         # No need to use a list of returns, since the game is deterministic
         for s in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
+#             print(self.policy_1.v_dict[47042])
              history = [s]
              while not State(from_base10 = s).is_terminal():
                   s = self.policy_1.move_dict[s]
@@ -53,6 +54,7 @@ class TrainOneRound:
              g = State(from_base10 = s).get_reward()
              for i, s in enumerate(history):
                   self.policy_1.v_dict[s] = g
+#             print(self.policy_1.v_dict[47042])
              self.policy_stable = not self.policy_1.be_greedy(history)
              self.i_epoch += 1
              if time.time() - t > 10:

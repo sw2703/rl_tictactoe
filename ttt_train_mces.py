@@ -32,7 +32,7 @@ class TrainOneRound:
              self.policy_1 = TabularPolicy()
              self.i_epoch = 0
         self.path = path
-        self.policy_stable = False
+        self.policy_stable = True
           
     def MCES(self):
         """ MC exploring start following Sutton Barto 5.3
@@ -50,12 +50,11 @@ class TrainOneRound:
                        break
                   s = self.policy_1.move_dict[s]
                   history.append(s)
-             # in our special case, g is a constant
              g = State(from_base10 = s).get_reward()
              for i, s in enumerate(history):
                   self.policy_1.v_dict[s] = g
-#             print(self.policy_1.v_dict[47042])
-             self.policy_stable = not self.policy_1.be_greedy(history)
+             if self.policy_1.be_greedy(history):
+                 self.policy_stable = False
              self.i_epoch += 1
              if time.time() - t > 10:
                   t = time.time()

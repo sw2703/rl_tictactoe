@@ -61,16 +61,9 @@ assert policy.v_dict[state.get_num()] == pytest.approx(
 
 """ The following are specific for full AI
 """
-state = State(board = [[1, 0, 0],
-                       [1, 1, 2],
-                       [1, 2, 2]], turn = 2)
-#policy.print_progression(state)
-#assert False
-
 state = State(board=[[1, 0, 0],
                      [1, 1, 2],
                      [0, 2, 2]])
-policy.print_progression(state)
 afterstate_num = policy.move_dict[state.get_num()]
 assert policy.v_dict[afterstate_num] == pytest.approx(
     1, abs=theta), 'Player 1 can win, expect value 1. Got %f' % policy.v_dict[afterstate_num]

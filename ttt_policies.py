@@ -65,7 +65,7 @@ class TabularPolicy():
         """
         state.print_board()
         num = state.get_num()
-        print("This state has value %f" % self.v_dict[num])
+        print("This state has value %f \n" % self.v_dict[num])
         if not state.is_terminal():
             afterstate = ttt_play.State(from_base10=self.move_dict[num])
             self.print_progression(afterstate)

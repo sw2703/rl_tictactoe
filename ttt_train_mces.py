@@ -65,5 +65,6 @@ class TrainOneRound:
         print('MC exploring start finished.')
              
 if __name__ == '__main__':
-    SelfPlayTrain(path=os.path.dirname(
-        os.getcwd()) + '/policy_evaluation.pkl')
+#    SelfPlayTrain(path=os.path.dirname(
+#        os.getcwd()) + '/policy_evaluation.pkl')
+    TrainOneRound(path = os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl', read_first = True).MCES()

@@ -32,7 +32,7 @@ class TabularPolicy():
                     return state.get_num()
         raise RuntimeError('Cannot make a move on a full board!')
 
-    def be_greedy(self, update_subset = None):
+    def be_greedy(self, update_subset=None):
         """ Change move_dict to be greedy according to v_dict
         Input:
              update_subset: if supplied, only update this subset.
@@ -41,7 +41,7 @@ class TabularPolicy():
         """
         policy_has_changed = False
         if not update_subset:
-             update_subset = range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1)
+            update_subset = range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1)
         for num in update_subset:
             s = ttt_play.State(from_base10=num)
             if not s.is_terminal():

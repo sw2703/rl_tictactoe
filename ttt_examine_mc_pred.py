@@ -21,11 +21,11 @@ state = State()
 assert policy.v_dict[state.get_num()] == pytest.approx(
     1, abs=theta), 'Player 1 wins, expect value 1. Got %f' % policy.v_dict[state.get_num()]
 
-state = State(board = [[1, 0, 0], [0, 0, 0], [0, 0, 0]], turn = 2)
+state = State(board=[[1, 0, 0], [0, 0, 0], [0, 0, 0]], turn=2)
 assert policy.v_dict[state.get_num()] == pytest.approx(
     1, abs=theta), 'Player 1 wins, expect value 1. Got %f' % policy.v_dict[state.get_num()]
 
-state = State(board = [[1, 2, 0], [0, 0, 0], [0, 0, 0]])
+state = State(board=[[1, 2, 0], [0, 0, 0], [0, 0, 0]])
 assert policy.v_dict[state.get_num()] == pytest.approx(
     1, abs=theta), 'Player 1 wins, expect value 1. Got %f' % policy.v_dict[state.get_num()]
 

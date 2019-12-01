@@ -42,7 +42,6 @@ class TrainOneRound:
             self.policy_2 = TabularPolicy()
         self.policy_ever_changed = True  # Set to true to state iterative training
 
-
     def ValueIteration(self, theta=0.01):
         t = time.time()
         while True:

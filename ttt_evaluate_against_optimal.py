@@ -5,11 +5,13 @@ Created on Sun Dec  1 06:57:48 2019
 @author: josephwang
 """
 from ttt_play import State
+import numpy as np
 import os
 import pickle
+import random
 
 class EvaluateAgainstOptimal:
-     def __init__(self, optimal_policy_path):
+     def __init__(self):
           """ Load an optimal policy
           """
           optimal_policy_path = os.path.dirname(os.getcwd()) + '/optimal_policy.pkl'
@@ -35,7 +37,7 @@ class EvaluateAgainstOptimal:
           assert -1 not in result_as_o  # Cannot defeat optimal policy
           print("%i ties and %i losses against optimal policy, playing O." % (result_as_o.count(0), result_as_o.count(1)))
 
-     def AutoPlay(policy_1, policy_2, n_games=100):
+     def AutoPlay(self, policy_1, policy_2, n_games=100):
           """ Let policy_1 and policy_2 play against each other for n_games
           Input: self explanatory.
           Returns:
@@ -43,7 +45,7 @@ class EvaluateAgainstOptimal:
           """
           game_results = []
           for i in range(n_games):
-               state = get_initial_state()
+               state = self.GetInitialState()
                if state.turn == 2:
                     state = State(from_base10 = policy_2.move_dict[state.get_num()])
                while not state.is_terminal():
@@ -53,3 +55,15 @@ class EvaluateAgainstOptimal:
                     state = State(from_base10 = policy_2.move_dict[state.get_num()])
                game_results.append(state.get_reward())
           return game_results
+     
+     def GetInitialState(self):
+          """ Return an initial state. 50% chance an empty board (turn = 1), 50% chance a board with a randomly placed X (turn = 2).
+          """
+          if np.random.rand() < 0.5:
+               return State()
+          else:
+               choices = State().legal_afterstates()
+               return random.choice(choices)
+          
+if __name__ == '__main__':
+      EvaluateAgainstOptimal()

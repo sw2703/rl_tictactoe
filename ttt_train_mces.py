@@ -28,8 +28,10 @@ class TrainOneRound:
         if read_first:
              self.policy_1, self.i_epoch = pickle.load(open(path, 'rb'))
              print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
+        else:
+             self.policy_1 = TabularPolicy()
+             self.i_epoch = 0
         self.path = path
-        self.i_epoch = 0
         self.policy_stable = False
           
     def MCES(self):
@@ -37,7 +39,6 @@ class TrainOneRound:
             Against rush opponent
         """
         t = time.time()
-        self.policy_1 = TabularPolicy()
         # No need to use a list of returns, since the game is deterministic
         for s in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
              history = [s]
@@ -65,6 +66,6 @@ class TrainOneRound:
         print('MC exploring start finished.')
              
 if __name__ == '__main__':
-#    SelfPlayTrain(path=os.path.dirname(
-#        os.getcwd()) + '/policy_evaluation.pkl')
-    TrainOneRound(path = os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl', read_first = True).MCES()
+    SelfPlayTrain(path=os.path.dirname(
+        os.getcwd()) + '/policy_evaluation.pkl')
+#    TrainOneRound(path = os.path.dirname(os.getcwd()) + '/policy_evaluation.pkl', read_first = True).MCES()

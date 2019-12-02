@@ -66,7 +66,7 @@ class TabularPolicy():
             state = ttt_play.State(from_base10 = num)
             return random.choice(state.legal_afterstates())
         else:
-            return self.rush_move(num_base10 = num)
+            return self.move_dict[num]
 
     def print_progression(self, state):
         """ Print the progression of a game starting from state till the end,

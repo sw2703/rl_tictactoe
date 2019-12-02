@@ -6,7 +6,7 @@ import pickle
 import time
 
 class Train:
-    def __init__(self, path, read_first=False, epsilon=0.3):
+    def __init__(self, path, read_first=False):
         """
         Input:
              path: the path to save the policy
@@ -20,21 +20,30 @@ class Train:
             self.i_epoch = 0
         self.path = path
         self.policy_stable = True
-        self.epsilon = epsilon
 
     def OffPlicyMCPrediction(self):
         """ Off-policy MC prediction following Sutton Barto 5.6
         """
+        policy_2 = TabularPolicy()  # behavior policy, will be called to give 
+                                    # epsilon-soft move with epsilon = 1
+                                    # i.e. fullly random
         t = time.time()
         while True:
              while time.time() - t < 10:
-                  returns = dict()
+                  returns = {}
+                  c = {}
                   num = State().get_num()
                   history = [num]
                   while not State(from_base10=num).is_terminal():
-                      num = self.policy_1.epsilon_soft(num, self.epsilon)
+                      num = self.policy_2.epsilon_soft(num, epsilon = 1)
                       history.append(num)
                   g = State(from_base10=num).get_reward()  # g is a constant for our case
+                  
+                  
+                  
+                  
+                  
+                  
                   for i, num in enumerate(history):
                       if num in returns:
                            returns[num].append(g)

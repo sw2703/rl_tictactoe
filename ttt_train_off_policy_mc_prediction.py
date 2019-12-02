@@ -3,10 +3,10 @@ from ttt_policies import TabularPolicy
 import numpy as np
 import os
 import pickle
+import time
 
-
-class TrainOneRound:
-    def __init__(self, path, read_first=False):
+class Train:
+    def __init__(self, path, read_first=False, epsilon=0.3):
         """
         Input:
              path: the path to save the policy
@@ -15,48 +15,44 @@ class TrainOneRound:
         if read_first:
             self.policy_1, self.i_epoch = pickle.load(open(path, 'rb'))
             print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
+        else:
+            self.policy_1 = TabularPolicy()
+            self.i_epoch = 0
         self.path = path
-        self.i_epoch = 0
+        self.policy_stable = True
+        self.epsilon = epsilon
 
-    def MCPrediction(self, n_epoch):
-        """ MC prediction following Sutton Barto 5.1
-            Against rush opponent
-        Input:
-             n_epoch: the number of episodes to be trained
+    def OffPlicyMCPrediction(self):
+        """ Off-policy MC prediction following Sutton Barto 5.6
         """
-        self.policy_1 = TabularPolicy()
-        self.policy_2 = TabularPolicy()
-        returns = dict()
-        for num in range(int('1' + '0' * 9, 3), int('2' * 10, 3) + 1):
-            returns[num] = []
-        for _ in range(n_epoch):
-            # generate an episode following policy_1
-            s = State().get_num()
-            history = [s]
-            while not State(from_base10=s).is_terminal():
-                s = self.policy_1.move_dict[s]
-                history.append(s)
-                if State(from_base10=s).is_terminal():
-                    break
-                s = self.policy_2.move_dict[s]
-                history.append(s)
-            # in our special case, g is a constant
-            g = State(from_base10=s).get_reward()
-            for i, s in enumerate(history):
-                returns[s].append(g)
-                if i % 2 == 0:
-                    self.policy_1.v_dict[s] = np.average(returns[s])
-                else:
-                    self.policy_2.v_dict[s] = np.average(returns[s])
-        for num in range(int('2' + '0' * 9, 3), int('2' * 10, 3) + 1):
-            self.policy_1.v_dict[num] = self.policy_2.v_dict[num]
-        self.i_epoch += 1
-        pickle.dump((self.policy_1, self.i_epoch),
-                    open(self.path, "wb"))
-        print('MC prediction finished.')
+        t = time.time()
+        while True:
+             while time.time() - t < 10:
+                  returns = dict()
+                  num = State().get_num()
+                  history = [num]
+                  while not State(from_base10=num).is_terminal():
+                      num = self.policy_1.epsilon_soft(num, self.epsilon)
+                      history.append(num)
+                  g = State(from_base10=num).get_reward()  # g is a constant for our case
+                  for i, num in enumerate(history):
+                      if num in returns:
+                           returns[num].append(g)
+                      else:
+                           returns[num] = [g]
+                      self.policy_1.v_dict[num] = np.average(returns[num])
+                  if self.policy_1.be_greedy(history):
+                      self.policy_stable = False
+                  self.i_epoch += 1
+     
+             t = time.time()
+             pickle.dump((self.policy_1, self.i_epoch),
+                        open(self.path, "wb"))
+             print("Trained %i epochs so far." % self.i_epoch)
 
 
 if __name__ == '__main__':
-    trainer = TrainOneRound(path=os.path.dirname(
-        os.getcwd()) + '/policy_evaluation.pkl')
-    trainer.MCPrediction(1)
+#        SelfPlayTrain(path=os.path.dirname(
+#            os.getcwd()) + '/policy_evaluation.pkl')
+    Train(path=os.path.dirname(os.getcwd()) +
+                  '/policy_evaluation.pkl', read_first=True).OnPolicyMCControl()

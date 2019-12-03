@@ -7,6 +7,7 @@ Created on Sun Nov  3 07:29:06 2019
 
 from ttt_play import State
 from ttt_policies import TabularPolicy
+from ttt_train_off_policy_mc_prediction import Train
 import pytest
 
 
@@ -119,3 +120,6 @@ def test_be_greedy():
     state = State()
     assert policy.move_dict[state.get_num()] == best.get_num()
     assert not policy.be_greedy()  # No more change when run the second time
+
+def test_get_trajectory():
+    trainer = Train()

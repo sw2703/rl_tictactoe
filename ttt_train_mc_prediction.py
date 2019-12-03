@@ -17,7 +17,7 @@ class TrainOneRound:
             print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
         self.path = path
         self.i_epoch = 0
-        self.policy_1 = TabularPolicy()        
+        self.policy_1 = TabularPolicy()
 
     def MCPrediction(self, n_epoch):
         """ MC prediction following Sutton Barto 5.1

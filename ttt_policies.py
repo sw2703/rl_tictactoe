@@ -60,10 +60,10 @@ class TabularPolicy():
                 if old_move != self.move_dict[num]:
                     policy_has_changed = True
         return policy_has_changed
-    
+
     def epsilon_soft(self, num, epsilon):
         if np.random.rand() < epsilon:
-            state = ttt_play.State(from_base10 = num)
+            state = ttt_play.State(from_base10=num)
             return random.choice(state.legal_afterstates())
         else:
             return self.move_dict[num]

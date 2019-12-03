@@ -13,13 +13,15 @@ class Train:
              read_first: if true, read from the path first
         """
         if read_first:
-            self.policy_1, self.i_epoch = pickle.load(open(path, 'rb'))
+            self.target_policy, self.i_epoch = pickle.load(open(path, 'rb'))
             print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
         else:
-            self.policy_1 = TabularPolicy()
+            self.target_policy = TabularPolicy()
             self.i_epoch = 0
-        self.policy_2 = TabularPolicy(
-        )  # behavior policy, will be called to give epsilon-soft move with epsilon = 1, i.e. fullly random
+        self.opponent_policy = TabularPolicy(
+        )  # will be called to give epsilon-soft move with epsilon = 1, i.e. fully random
+        self.behavior_policy = TabularPolicy(
+        )  # behavior policy, will be called to give epsilon-soft move with epsilon = 1, i.e. fully random
         self.path = path
         self.policy_stable = True
         self.epsilon = 0.1
@@ -41,9 +43,9 @@ class Train:
         trajectory = self.GetOneTrajectory()
         self.MCPredictIncremental(trajectory)
 
-    def GetOneTrajectory(self):
+    def GetOneTrajectory(self, policy_1, policy_2):
         """ 
-        Returns: list of state nums of a trajectory following the behavior policy, self.policy_2
+        Returns: list of state nums of a trajectory where player
         """
         num = State().get_num()
         trajectory = [num]

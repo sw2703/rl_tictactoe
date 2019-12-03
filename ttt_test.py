@@ -121,9 +121,10 @@ def test_be_greedy():
     assert policy.move_dict[state.get_num()] == best.get_num()
     assert not policy.be_greedy()  # No more change when run the second time
 
+
 def test_get_trajectory():
-    trainer = Train(path = 'foo', read_first = False)
-    trainer.epsilon  = 0
+    trainer = Train(path='foo', read_first=False)
+    trainer.epsilon = 0
     trajectory = trainer.GetOneTrajectory()
     num1 = State(board=[[0, 0, 0], [0, 0, 0], [0, 0, 0]]).get_num()
     num2 = State(board=[[1, 0, 0], [0, 0, 0], [0, 0, 0]], turn=2).get_num()

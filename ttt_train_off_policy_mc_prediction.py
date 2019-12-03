@@ -40,17 +40,21 @@ class Train:
     def TrainOneRound(self):
         """ Off-policy MC prediction following Sutton Barto 5.6
         """
-        trajectory = self.GetOneTrajectory()
+        # behavior policy playing player 1
+        trajectory = self.GetOneTrajectory(self.behavior_policy, self.opponent_policy)
+        self.MCPredictIncremental(trajectory)
+        # behavior policy playing player 2
+        trajectory = self.GetOneTrajectory(self.opponent_policy, self.behavior_policy)
         self.MCPredictIncremental(trajectory)
 
     def GetOneTrajectory(self, policy_1, policy_2):
         """ 
-        Returns: list of state nums of a trajectory where player
+        Returns: list of state nums of a trajectory
         """
         num = State().get_num()
         trajectory = [num]
         while not State(from_base10=num).is_terminal():
-            num = self.policy_2.epsilon_soft(num, epsilon=self.epsilon)
+            num = self.policy_1.epsilon_soft(num, epsilon=0) 
             trajectory.append(num)
         return trajectory
 

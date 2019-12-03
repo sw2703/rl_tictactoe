@@ -74,40 +74,30 @@ class Train:
         g = State(from_base10=trajectory[-1]).get_reward()
         w = 1.
         i = len(trajectory) - 1
-        while i >= 0:
-            if (i % 2 + 1) == role_behavior_policy:
-                if w == 0:
-                    break
-                state = trajectory[i]
-                if state in c:
-                    c[state] += w
-                else:
-                    c[state] = w
-                self.policy_1.v_dict[state] += w / \
-                    c[state] * (g - self.policy_1.v_dict[state])
-                if i != 0 and self.policy_1.move_dict[trajectory[i-1]] != trajectory[i]:
-                    w = 0
-                else:
-                    w = w / \
-                        len(State(from_base10=trajectory[i-1]).legal_afterstates())
-                
-        
-        
-        
-        for i, state in reversed(list(enumerate(trajectory))):
+        for i, _ in reversed(list(enumerate(trajectory))):
+            if i == len(trajectory) - 1:
+                # ignore the very last state, which is not a beforestate
+                continue
+            if (i % 2 + 1) != role_behavior_policy:
+                # i denotes the number of pieces on the board. i%2+1 is 1 if 
+                # this is player 1's before state, and is 2 if this is player 
+                # 2's before state.
+                continue
             if w == 0:
                 break
-            if state in c:
-                c[state] += w
+            afterstate = trajectory[i+1]
+            if afterstate in c:
+                c[afterstate] += w
             else:
-                c[state] = w
-            self.policy_1.v_dict[state] += w / \
-                c[state] * (g - self.policy_1.v_dict[state])
-            if i != 0 and self.policy_1.move_dict[trajectory[i-1]] != trajectory[i]:
+                c[afterstate] = w
+            self.policy_1.v_dict[afterstate] += w / \
+                c[afterstate] * (g - self.policy_1.v_dict[afterstate])
+                
+            if self.policy_1.move_dict[trajectory[i]] != afterstate:
                 w = 0
             else:
                 w = w / \
-                    len(State(from_base10=trajectory[i-1]).legal_afterstates())
+                    len(State(from_base10=trajectory[i]).legal_afterstates())
 
 
 if __name__ == '__main__':

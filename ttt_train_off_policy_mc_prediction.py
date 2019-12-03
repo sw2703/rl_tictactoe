@@ -19,12 +19,12 @@ class Train:
             self.policy_1 = TabularPolicy()
             self.i_epoch = 0
         self.policy_2 = TabularPolicy(
-        )  # behavior policy, will be called to give epsilon-soft move with epsilon = 1, i.e. fullly random            
+        )  # behavior policy, will be called to give epsilon-soft move with epsilon = 1, i.e. fullly random
         self.path = path
         self.policy_stable = True
         self.epsilon = 0.1
 
-    def TrainContinuously(self, n_epoch = 1e24):
+    def TrainContinuously(self, n_epoch=1e24):
         t = time.time()
         while self.i_epoch < n_epoch:
             while time.time() - t < 10 and self.i_epoch < n_epoch:
@@ -37,7 +37,7 @@ class Train:
 
     def TrainOneRound(self):
         """ Off-policy MC prediction following Sutton Barto 5.6
-        """        
+        """
         trajectory = self.GetOneTrajectory()
         self.MCPredictIncremental(trajectory)
 
@@ -51,12 +51,13 @@ class Train:
             num = self.policy_2.epsilon_soft(num, epsilon=self.epsilon)
             trajectory.append(num)
         return trajectory
-    
+
     def MCPredictIncremental(self, trajectory):
         """ Incremental implementation of off-policy MC prediction
         """
         c = {}
-        g = State(from_base10=trajectory[-1]).get_reward()  # g is a constant for our case        
+        # g is a constant for our case
+        g = State(from_base10=trajectory[-1]).get_reward()
         w = 1.
         for i, state in reversed(list(enumerate(trajectory))):
             if w == 0:
@@ -71,10 +72,11 @@ class Train:
                 w = 0
             else:
                 w = w / \
-                    len(State(from_base10=trajectory[i-1]).legal_afterstates())        
-    
+                    len(State(from_base10=trajectory[i-1]).legal_afterstates())
+
+
 if __name__ == '__main__':
     #        SelfPlayTrain(path=os.path.dirname(
     #            os.getcwd()) + '/policy_evaluation.pkl')
     Train(path=os.path.dirname(os.getcwd()) +
-          '/policy_evaluation.pkl', read_first=False).TrainContinuously(n_epoch  = 2)
+          '/policy_evaluation.pkl', read_first=False).TrainContinuously(n_epoch=2)

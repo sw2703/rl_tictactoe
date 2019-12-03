@@ -22,6 +22,7 @@ class Train:
         )  # behavior policy, will be called to give epsilon-soft move with epsilon = 1, i.e. fullly random            
         self.path = path
         self.policy_stable = True
+        self.epsilon = 0.1
 
     def TrainContinuously(self):
         t = time.time()
@@ -63,7 +64,7 @@ class Train:
         num = State().get_num()
         trajectory = [num]
         while not State(from_base10=num).is_terminal():
-            num = self.policy_2.epsilon_soft(num, epsilon=1)
+            num = self.policy_2.epsilon_soft(num, epsilon=self.epsilon)
             trajectory.append(num)
         return trajectory
     

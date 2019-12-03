@@ -122,4 +122,15 @@ def test_be_greedy():
     assert not policy.be_greedy()  # No more change when run the second time
 
 def test_get_trajectory():
-    trainer = Train()
+    trainer = Train(path = 'foo', read_first = False)
+    trainer.epsilon  = 0
+    trajectory = trainer.GetOneTrajectory()
+    num1 = State(board=[[0, 0, 0], [0, 0, 0], [0, 0, 0]]).get_num()
+    num2 = State(board=[[1, 0, 0], [0, 0, 0], [0, 0, 0]], turn=2).get_num()
+    num3 = State(board=[[1, 2, 0], [0, 0, 0], [0, 0, 0]]).get_num()
+    num4 = State(board=[[1, 2, 1], [0, 0, 0], [0, 0, 0]], turn=2).get_num()
+    num5 = State(board=[[1, 2, 1], [2, 0, 0], [0, 0, 0]]).get_num()
+    num6 = State(board=[[1, 2, 1], [2, 1, 0], [0, 0, 0]], turn=2).get_num()
+    num7 = State(board=[[1, 2, 1], [2, 1, 2], [0, 0, 0]]).get_num()
+    num8 = State(board=[[1, 2, 1], [2, 1, 2], [1, 0, 0]], turn=2).get_num()
+    assert trajectory == [num1, num2, num3, num4, num5, num6, num7, num8]

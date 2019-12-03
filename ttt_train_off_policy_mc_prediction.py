@@ -41,10 +41,12 @@ class Train:
         """ Off-policy MC prediction following Sutton Barto 5.6
         """
         # behavior policy playing player 1
-        trajectory = self.GetOneTrajectory(self.behavior_policy, self.opponent_policy)
+        trajectory = self.GetOneTrajectory(
+            self.behavior_policy, self.opponent_policy)
         self.MCPredictIncremental(trajectory)
         # behavior policy playing player 2
-        trajectory = self.GetOneTrajectory(self.opponent_policy, self.behavior_policy)
+        trajectory = self.GetOneTrajectory(
+            self.opponent_policy, self.behavior_policy)
         self.MCPredictIncremental(trajectory)
 
     def GetOneTrajectory(self, policy_1, policy_2):
@@ -54,7 +56,7 @@ class Train:
         num = State().get_num()
         trajectory = [num]
         while not State(from_base10=num).is_terminal():
-            num = self.policy_1.epsilon_soft(num, epsilon=0) 
+            num = policy_1.move(num)
             trajectory.append(num)
         return trajectory
 

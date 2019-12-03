@@ -5,11 +5,13 @@ import ttt_play
 
 class TabularPolicy():
     """ By default, a rush policy, i.e. selects the first available move.
+    Input: epsilon, to be used in epsilon-soft policies
     """
 
-    def __init__(self):
+    def __init__(self, epsilon=0):
         self.init_v_dict()
         self.init_move_dict()
+        self.epsilon = epsilon
 
     def init_v_dict(self):
         self.v_dict = dict()
@@ -61,8 +63,8 @@ class TabularPolicy():
                     policy_has_changed = True
         return policy_has_changed
 
-    def epsilon_soft(self, num, epsilon):
-        if np.random.rand() < epsilon:
+    def move(self, num):
+        if np.random.rand() < self.epsilon:
             state = ttt_play.State(from_base10=num)
             return random.choice(state.legal_afterstates())
         else:

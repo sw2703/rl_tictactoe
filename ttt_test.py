@@ -125,7 +125,7 @@ def test_be_greedy():
 def test_get_trajectory():
     trainer = Train(path='foo', read_first=False)
     trainer.epsilon = 0
-    trajectory = trainer.GetOneTrajectory()
+    trajectory = trainer.GetOneTrajectory(TabularPolicy(), TabularPolicy())
     num1 = State(board=[[0, 0, 0], [0, 0, 0], [0, 0, 0]]).get_num()
     num2 = State(board=[[1, 0, 0], [0, 0, 0], [0, 0, 0]], turn=2).get_num()
     num3 = State(board=[[1, 2, 0], [0, 0, 0], [0, 0, 0]]).get_num()

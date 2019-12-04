@@ -135,3 +135,12 @@ def test_get_trajectory():
     num7 = State(board=[[1, 2, 1], [2, 1, 2], [0, 0, 0]]).get_num()
     num8 = State(board=[[1, 2, 1], [2, 1, 2], [1, 0, 0]], turn=2).get_num()
     assert trajectory == [num1, num2, num3, num4, num5, num6, num7, num8]
+
+def test_random_move():
+    policy = TabularPolicy(epsilon = 1)
+    collect = []
+    for _ in range(10000):
+        collect.append(policy.move(31206))
+    assert collect.count(51618) == pytest.approx(3333, abs=100)
+    assert collect.count(50916) == pytest.approx(3333, abs=100)
+    assert collect.count(50890) == pytest.approx(3333, abs=100)

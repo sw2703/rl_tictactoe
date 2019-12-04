@@ -22,7 +22,7 @@ class Train:
         self.behavior_policy = TabularPolicy(epsilon=1)
         self.path = path
         self.policy_stable = True
-        self.epsilon = 0.1
+        self.c = {}
 
     def TrainContinuously(self, n_epoch=1e99):
         t = time.time()
@@ -31,7 +31,7 @@ class Train:
                 self.TrainOneRound()
                 self.i_epoch += 1
             t = time.time()
-            pickle.dump((self.policy_1, self.i_epoch),
+            pickle.dump((self.target_policy, self.i_epoch),
                         open(self.path, "wb"))
             print("Trained %i epochs so far." % self.i_epoch)
 
@@ -69,12 +69,11 @@ class Train:
             trajectory
             role_behavior_policy: 1 or 2, denoting which player the behavior policy acted as in this trajectory
         """
-        c = {}
         # g is a constant for our case
         g = State(from_base10=trajectory[-1]).get_reward()
         w = 1.
         i = len(trajectory) - 1
-        for i, _ in reversed(list(enumerate(trajectory))):
+        for i, state in reversed(list(enumerate(trajectory))):
             if i == len(trajectory) - 1:
                 # ignore the very last state, which is not a beforestate
                 continue
@@ -86,14 +85,17 @@ class Train:
             if w == 0:
                 break
             afterstate = trajectory[i+1]
-            if afterstate in c:
-                c[afterstate] += w
+            if afterstate == 31206:
+                assert role_behavior_policy == 2
+                print(trajectory)
+            if afterstate in self.c:
+                self.c[afterstate] += w
             else:
-                c[afterstate] = w
-            self.policy_1.v_dict[afterstate] += w / \
-                c[afterstate] * (g - self.policy_1.v_dict[afterstate])
-                
-            if self.policy_1.move_dict[trajectory[i]] != afterstate:
+                self.c[afterstate] = w
+            self.target_policy.v_dict[afterstate] += w / \
+                self.c[afterstate] * (g - self.target_policy.v_dict[afterstate])
+
+            if self.target_policy.move_dict[trajectory[i]] != afterstate:
                 w = 0
             else:
                 w = w / \
@@ -104,4 +106,4 @@ if __name__ == '__main__':
     #        SelfPlayTrain(path=os.path.dirname(
     #            os.getcwd()) + '/policy_evaluation.pkl')
     Train(path=os.path.dirname(os.getcwd()) +
-          '/policy_evaluation.pkl', read_first=False).TrainContinuously(n_epoch=2)
+          '/policy_evaluation.pkl', read_first=False).TrainContinuously()

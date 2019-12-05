@@ -136,8 +136,9 @@ def test_get_trajectory():
     num8 = State(board=[[1, 2, 1], [2, 1, 2], [1, 0, 0]], turn=2).get_num()
     assert trajectory == [num1, num2, num3, num4, num5, num6, num7, num8]
 
+
 def test_random_move():
-    policy = TabularPolicy(epsilon = 1)
+    policy = TabularPolicy(epsilon=1)
     collect = []
     for _ in range(10000):
         collect.append(policy.move(31206))

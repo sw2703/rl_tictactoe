@@ -78,27 +78,24 @@ class Train:
                 # ignore the very last state, which is not a beforestate
                 continue
             if (i % 2 + 1) != role_behavior_policy:
-                # i denotes the number of pieces on the board. i%2+1 is 1 if 
-                # this is player 1's before state, and is 2 if this is player 
+                # i denotes the number of pieces on the board. i%2+1 is 1 if
+                # this is player 1's before state, and is 2 if this is player
                 # 2's before state.
                 continue
             if w == 0:
                 break
             afterstate = trajectory[i+1]
-            if afterstate == 31206:
-                assert role_behavior_policy == 2
-                print(trajectory)
             if afterstate in self.c:
                 self.c[afterstate] += w
             else:
                 self.c[afterstate] = w
             self.target_policy.v_dict[afterstate] += w / \
-                self.c[afterstate] * (g - self.target_policy.v_dict[afterstate])
-
+                self.c[afterstate] * \
+                (g - self.target_policy.v_dict[afterstate])
             if self.target_policy.move_dict[trajectory[i]] != afterstate:
                 w = 0
             else:
-                w = w / \
+                w = w * \
                     len(State(from_base10=trajectory[i]).legal_afterstates())
 
 

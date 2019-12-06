@@ -13,16 +13,17 @@ class Train:
              read_first: if true, read from the path first
         """
         if read_first:
-            self.target_policy, self.i_epoch = pickle.load(open(path, 'rb'))
+            self.target_policy, self.i_epoch, self.c = pickle.load(open(path, 'rb'))
             print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
         else:
             self.target_policy = TabularPolicy()
             self.i_epoch = 0
+            self.c = {}
+
         self.opponent_policy = TabularPolicy(epsilon=1)
         self.behavior_policy = TabularPolicy(epsilon=1)
         self.path = path
         self.policy_stable = True
-        self.c = {}
 
     def TrainContinuously(self, n_epoch=1e99):
         t = time.time()
@@ -31,7 +32,7 @@ class Train:
                 self.TrainOneRound()
                 self.i_epoch += 1
             t = time.time()
-            pickle.dump((self.target_policy, self.i_epoch),
+            pickle.dump((self.target_policy, self.i_epoch, self.c),
                         open(self.path, "wb"))
             print("Trained %i epochs so far." % self.i_epoch)
 

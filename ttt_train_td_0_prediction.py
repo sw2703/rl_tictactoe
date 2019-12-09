@@ -37,11 +37,22 @@ class Train:
         """
         # Target policy as player 1
         state = State()
-        while not state.is_terminal():
-            if state.turn == 1:
-                s_prime_num = self.target_policy.move(state.get_num())
+        state_num = state.get_num()
+        afterstate_num = self.target_policy.move(state_num)
+        afterstate = State(from_base10 = afterstate_num)
+        while not afterstate.is_terminal():
+            beforestate_num = self.opponent.move(afterstate.get_num())
+            beforestate = State(from_base10 = beforestate_num)
+            if beforestate.is_terminal():
+                r = beforestate.get_reward()
+                self.target_policy.v_dict[afterstate_num] += alpha * (r - self.target_policy.v_dict[afterstate_num])
             else:
-                s_prime_num = self.opponent_policy.move(state.get_num())
+                afterstate_num = self.target_policy.move(beforestate_num)
+                afterstate = State(from_base10 = afterstate_num)
+                r = afterstate.get_rewared()
+            
+            
+            s_prime_num = self.opponent_policy.move(afterstate.get_num())
             r = State(from_base10=s_prime_num).get_reward()
             self.target_policy.v_dict[state.get_num()] += alpha * (
                 r + self.target_policy.v_dict[s_prime_num] - self.target_policy.v_dict[state.get_num()])

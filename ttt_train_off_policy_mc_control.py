@@ -13,7 +13,8 @@ class Train:
              read_first: if true, read from the path first
         """
         if read_first:
-            self.target_policy, self.i_epoch, self.c = pickle.load(open(path, 'rb'))
+            self.target_policy, self.i_epoch, self.c = pickle.load(
+                open(path, 'rb'))
             print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
         else:
             self.target_policy = TabularPolicy()

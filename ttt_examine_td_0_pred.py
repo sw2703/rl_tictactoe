@@ -23,12 +23,12 @@ print('Accuracy %f' % theta)
 # assert policy.v_dict[state.get_num()] == pytest.approx(
 #    -0.5, abs=theta), 'Player 2 plays random, one move is winning and one move is leading to a tie, expect value -0.5. Got %f' % policy.v_dict[state.get_num()]
 
-state = State(board=[[1, 1, 2],
-                     [1, 2, 1],
-                     [0, 2, 0]], turn=2)
+state = State(board = [[1, 2, 1],
+                       [2, 1, 2],
+                       [0, 0, 0]], turn=1)
 state.print_board()
 assert policy.v_dict[state.get_num()] == pytest.approx(
-    0, abs=theta), 'Player 2 players random, one move is winning, the other one is losing. Expect value 0. Got %f' % policy.v_dict[state.get_num()]
+    1, abs=theta), 'Both play rush, player 1 will win. Got %f' % policy.v_dict[state.get_num()]
 
 
 """ Keep this print statement at the end

@@ -18,7 +18,7 @@ class Train:
         else:
             self.target_policy = TabularPolicy()
             self.i_epoch = 0
-        self.opponent_policy = TabularPolicy(epsilon=1)
+        self.opponent_policy = TabularPolicy()
         self.path = path
         # num for the state with an empty board and with player 1 to make a move.
         self.start_num = int('1' + '0' * 9, 3)
@@ -58,6 +58,8 @@ class Train:
                 r = s_prime.get_reward()
                 self.target_policy.v_dict[afterstate.get_num(
                 )] += alpha * (r - self.target_policy.v_dict[afterstate.get_num()])
+                if afterstate.get_num() == 45927:
+                    print(self.target_policy.v_dict[45927])
                 afterstate = s_prime
 
 

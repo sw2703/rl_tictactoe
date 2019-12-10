@@ -106,4 +106,4 @@ if __name__ == '__main__':
     #        SelfPlayTrain(path=os.path.dirname(
     #            os.getcwd()) + '/policy_evaluation.pkl')
     Train(path=os.path.dirname(os.getcwd()) +
-          '/policy_evaluation.pkl', read_first=True).TrainContinuously()
+          '/policy_evaluation.pkl', read_first=False).TrainContinuously()

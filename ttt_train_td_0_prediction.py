@@ -57,9 +57,7 @@ class Train:
                 s_prime = State(from_base10=s_prime_num)
                 r = s_prime.get_reward()
                 self.target_policy.v_dict[afterstate.get_num(
-                )] += alpha * (r - self.target_policy.v_dict[afterstate.get_num()])
-                if afterstate.get_num() == 45927:
-                    print(self.target_policy.v_dict[45927])
+                )] += alpha * (r + self.target_policy.v_dict[s_prime_num] - self.target_policy.v_dict[afterstate.get_num()])
                 afterstate = s_prime
 
 

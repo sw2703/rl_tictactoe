@@ -7,7 +7,7 @@ import time
 
 
 class Train:
-    def __init__(self, path, read_first=False, epsilon=0.3):
+    def __init__(self, path, read_first=False, epsilon=.5):
         """
         Input:
              path: the path to save the policy
@@ -17,17 +17,18 @@ class Train:
             self.policy_1, self.i_epoch = pickle.load(open(path, 'rb'))
             print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
         else:
-            self.policy_1 = TabularPolicy(epsilon = .1)
+            self.policy_1 = TabularPolicy(epsilon = epsilon)
             self.i_epoch = 0
         self.path = path
         self.policy_stable = True
         self.epsilon = epsilon
+        self.policy_1.epsilon = epsilon
+        self.returns = dict()
 
     def OnPolicyMCControl(self):
         """ On-policy MC control following Sutton Barto 5.4
         """
         t = time.time()
-        returns = dict()
         while True:
             while time.time() - t < 10:
                 num = State().get_num()
@@ -39,18 +40,18 @@ class Train:
                 g = State(from_base10=num).get_reward()
                 for i, num in enumerate(history):
                     if num in returns:
-                        returns[num].append(g)
+                        self.returns[num].append(g)
                     else:
-                        returns[num] = [g]
-                    self.policy_1.v_dict[num] = np.average(returns[num])
-                    if num == 36531:
+                        self.returns[num] = [g]
+                    self.policy_1.v_dict[num] = np.average(self.returns[num])
+                    if num == 24138:
                         print(self.policy_1.v_dict[num])
                 if self.policy_1.be_greedy(history):
                     self.policy_stable = False
                 self.i_epoch += 1
 
             t = time.time()
-            pickle.dump((self.policy_1, self.i_epoch),
+            pickle.dump((self.policy_1, self.i_epoch, self.returns),
                         open(self.path, "wb"))
             print("Trained %i epochs so far." % self.i_epoch)
 

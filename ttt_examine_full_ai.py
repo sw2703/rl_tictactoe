@@ -9,7 +9,7 @@ import os
 import pickle
 import pytest
 
-policy, i_epoch = pickle.load(open(os.path.dirname(
+policy, i_epoch, _ = pickle.load(open(os.path.dirname(
     os.getcwd()) + '/policy_evaluation.pkl', 'rb'))
 
 print('This value function has been trained for %i epochs.' % i_epoch)
@@ -71,6 +71,7 @@ assert policy.v_dict[afterstate_num] == pytest.approx(
 state = State(board=[[0, 2, 0],
                      [0, 1, 0],
                      [0, 0, 0]])
+state.print_board()
 afterstate_num = policy.move_dict[state.get_num()]
 assert policy.v_dict[afterstate_num] == pytest.approx(
     1, abs=theta), 'Player 1 can win, expect value 1. Got %f' % policy.v_dict[afterstate_num]

@@ -136,7 +136,7 @@ class Game():
     def __init__(self, policy_path=None):
         self.state = State()
         if policy_path:
-            policy, i_epoch = pickle.load(open(policy_path, 'rb'))
+            policy, i_epoch, _ = pickle.load(open(policy_path, 'rb'))
             self.policy = policy
         else:
             self.policy = ttt_policies.TabularPolicy()

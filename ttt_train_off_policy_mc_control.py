@@ -1,5 +1,6 @@
 from ttt_play import State
 from ttt_policies import TabularPolicy
+import copy
 import os
 import pickle
 import time
@@ -21,7 +22,6 @@ class Train:
             self.i_epoch = 0
             self.c = {}
 
-        self.opponent_policy = TabularPolicy(epsilon=1)
         self.behavior_policy = TabularPolicy(epsilon=1)
         self.path = path
         self.policy_stable = True
@@ -42,11 +42,11 @@ class Train:
         """
         # behavior policy playing player 1
         trajectory = self.GetOneTrajectory(
-            self.behavior_policy, self.opponent_policy)
+            self.behavior_policy, self.target_policy)
         self.OffPolicyMCControl(trajectory, 1)
         # behavior policy playing player 2
         trajectory = self.GetOneTrajectory(
-            self.opponent_policy, self.behavior_policy)
+            self.target_policy, self.behavior_policy)
         self.OffPolicyMCControl(trajectory, 2)
 
     def GetOneTrajectory(self, policy_1, policy_2):
@@ -89,8 +89,6 @@ class Train:
                 self.c[afterstate] += w
             else:
                 self.c[afterstate] = w
-            if afterstate == 35574:
-                print(self.c[afterstate])
             self.target_policy.v_dict[afterstate] += w / \
                 self.c[afterstate] * \
                 (g - self.target_policy.v_dict[afterstate])

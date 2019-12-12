@@ -16,7 +16,7 @@ class Train:
             self.target_policy, self.i_epoch = pickle.load(open(path, 'rb'))
             print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
         else:
-            self.target_policy = TabularPolicy()
+            self.target_policy = TabularPolicy(epsilon = 0.3)
             self.i_epoch = 0
         self.opponent_policy = TabularPolicy(epsilon=1)
         self.path = path
@@ -28,7 +28,7 @@ class Train:
         while self.i_epoch < n_epoch:
             while time.time() - t < 10 and self.i_epoch < n_epoch:
                 # Target policy as player 1
-                self.TrainOneRound(self.target_policy.move_dict[self.start_num])
+                self.TrainOneRound(self.target_policy.move(self.start_num))
                 self.i_epoch += 1
                 # Target policy as player 2
                 self.TrainOneRound(self.start_num)
@@ -37,7 +37,7 @@ class Train:
                         open(self.path, "wb"))
             print("Trained %i epochs so far." % self.i_epoch)
 
-    def TrainOneRound(self, afterstate_num, alpha=0.1):
+    def TrainOneRound(self, afterstate_num, alpha=.1):
         """ Sarsa following Sutton and Barto 6.2
         Input:
             afterstate: the afterstate of target_policy to start trainng with

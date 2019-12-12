@@ -136,7 +136,7 @@ class Game():
     def __init__(self, policy_path=None):
         self.state = State()
         if policy_path:
-            policy, i_epoch, _ = pickle.load(open(policy_path, 'rb'))
+            policy, i_epoch = pickle.load(open(policy_path, 'rb'))
             self.policy = policy
         else:
             self.policy = ttt_policies.TabularPolicy()
@@ -184,8 +184,8 @@ class GUIGame(Game):
                                 font=self.font, width=2, height=1)
                 button.grid(row=y, column=x)
                 self.buttons[x, y] = button
-        if np.random.rand() < .5:
-            self.computer_move(initial_random=True)
+        if np.random.rand() < 5:
+            self.computer_move(initial_random=False)
 
     def human_move(self, x, y):
         """ Move by the human player

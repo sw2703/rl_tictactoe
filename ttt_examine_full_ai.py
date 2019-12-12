@@ -9,7 +9,7 @@ import os
 import pickle
 import pytest
 
-policy, i_epoch, _ = pickle.load(open(os.path.dirname(
+policy, i_epoch = pickle.load(open(os.path.dirname(
     os.getcwd()) + '/policy_evaluation.pkl', 'rb'))
 
 print('This value function has been trained for %i epochs.' % i_epoch)

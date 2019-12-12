@@ -14,6 +14,7 @@ class Train:
         """
         if read_first:
             self.target_policy, self.i_epoch = pickle.load(open(path, 'rb'))
+            self.target_policy.epsilon = 0.3
             print('Policy read from file. Trained for %i epochs.' % self.i_epoch)
         else:
             self.target_policy = TabularPolicy(epsilon = 0.3)
@@ -22,6 +23,8 @@ class Train:
         self.path = path
         # num for the state with an empty board and with player 1 to make a move.
         self.start_num = int('1' + '0' * 9, 3)
+        self.counter = {}
+        self.counter[24138] = 0
 
     def TrainContinuously(self, n_epoch=1e99):
         t = time.time()
@@ -41,7 +44,7 @@ class Train:
         """ Sarsa following Sutton and Barto 6.2
         Input:
             afterstate: the afterstate of target_policy to start trainng with
-            Note that the opponent mamkes a move first, then the target policy.
+            Note that the opponent makes a move first, then the target policy.
         """
         afterstate = State(from_base10=afterstate_num)
         while not afterstate.is_terminal():
@@ -60,10 +63,11 @@ class Train:
                 self.target_policy.v_dict[afterstate.get_num(
                 )] += alpha * (r + self.target_policy.v_dict[s_prime_num] - self.target_policy.v_dict[afterstate.get_num()])
                 afterstate = s_prime
+        self.target_policy.be_greedy([self.start_num])
 
 
 if __name__ == '__main__':
     #        SelfPlayTrain(path=os.path.dirname(
     #            os.getcwd()) + '/policy_evaluation.pkl')
     Train(path=os.path.dirname(os.getcwd()) +
-          '/policy_evaluation.pkl', read_first=False).TrainContinuously()
+          '/policy_evaluation.pkl', read_first=True).TrainContinuously()
